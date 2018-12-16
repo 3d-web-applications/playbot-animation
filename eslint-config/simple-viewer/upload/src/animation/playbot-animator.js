@@ -1,26 +1,26 @@
 import defaultUpdate from '../utils/default-update-function';
 import { Forward, Backward } from './animation-states';
 
-const PlaybotAnimator = pc.createScript('PlaybotAnimator');
+const Animator = pc.createScript('Animator');
 
-PlaybotAnimator.attributes.add('_animationSpeed', {
+Animator.attributes.add('_animationSpeed', {
   type: 'number',
   title: 'Start Animation Speed',
   default: 1,
   description: 'Set default animation speed',
 });
 
-PlaybotAnimator.attributes.add('_blendTime', {
+Animator.attributes.add('_blendTime', {
   type: 'number',
   title: 'Blend Time',
   default: 0,
   description: 'Time to blend between animations',
 });
 
-PlaybotAnimator.prototype._animation = null;
-PlaybotAnimator.prototype._playbackDirection = null;
+Animator.prototype._animation = null;
+Animator.prototype._playbackDirection = null;
 
-Object.defineProperty(PlaybotAnimator.prototype, 'animation', {
+Object.defineProperty(Animator.prototype, 'animation', {
   get() {
     return this._animation;
   },
@@ -30,7 +30,7 @@ Object.defineProperty(PlaybotAnimator.prototype, 'animation', {
   },
 });
 
-Object.defineProperty(PlaybotAnimator.prototype, 'playbackDirection', {
+Object.defineProperty(Animator.prototype, 'playbackDirection', {
   get() {
     return this._playbackDirection;
   },
@@ -43,23 +43,30 @@ Object.defineProperty(PlaybotAnimator.prototype, 'playbackDirection', {
   },
 });
 
-PlaybotAnimator.prototype.update = defaultUpdate;
+Animator.prototype.update = defaultUpdate;
 
-PlaybotAnimator.prototype.startIdleAnimation = function (reverse) {
+Animator.prototype.startAnimation = function (animationName, reverse, loop) {
+  const { _animation, _blendTime } = this;
+  _animation.play(animationName, _blendTime);
+  this.playbackDirection = (reverse) ? Backward : Forward;
+  _animation.loop = loop;
+};
+
+Animator.prototype.startIdleAnimation = function (reverse) {
   const { _animation, _blendTime } = this;
   _animation.play('Playbot_idle', _blendTime);
   this.playbackDirection = (reverse) ? Backward : Forward;
   _animation.loop = true;
 };
 
-PlaybotAnimator.prototype.startRunAnimation = function (reverse) {
+Animator.prototype.startRunAnimation = function (reverse) {
   const { _animation, _blendTime/* , _animationSpeed */ } = this;
   _animation.play('Playbot_run', _blendTime);
   this.playbackDirection = (reverse) ? Backward : Forward;
   _animation.loop = true;
 };
 
-PlaybotAnimator.prototype.startJumpAnimation = function (reverse) {
+Animator.prototype.startJumpAnimation = function (reverse) {
   const { _animation, _blendTime } = this;
   _animation.play('Playbot_jump', _blendTime);
   this.playbackDirection = (reverse) ? Backward : Forward;
@@ -67,26 +74,26 @@ PlaybotAnimator.prototype.startJumpAnimation = function (reverse) {
   this.update = this.jumpAnimation;
 };
 
-PlaybotAnimator.prototype.startDieAnimation = function (reverse) {
+Animator.prototype.startDieAnimation = function (reverse) {
   const { _animation, _blendTime } = this;
   _animation.play('Playbot_die', _blendTime);
   this.playbackDirection = (reverse) ? Backward : Forward;
   _animation.loop = false;
 };
 
-PlaybotAnimator.prototype.getCurrentDuration = function () {
+Animator.prototype.getCurrentDuration = function () {
   return this._animation.duration;
 };
 
-PlaybotAnimator.prototype.getCurrentTime = function () {
+Animator.prototype.getCurrentTime = function () {
   return this._animation.currentTime;
 };
 
-PlaybotAnimator.prototype.getAnimationProgress = function () {
+Animator.prototype.getAnimationProgress = function () {
   return this.getCurrentTime() / this.getCurrentDuration();
 };
 
-PlaybotAnimator.prototype.jumpAnimation = function (/* dt */) {
+Animator.prototype.jumpAnimation = function (/* dt */) {
   if (this.getAnimationProgress() < 1.0) {
     return;
   }
@@ -94,7 +101,7 @@ PlaybotAnimator.prototype.jumpAnimation = function (/* dt */) {
   this.update = defaultUpdate;
 };
 
-PlaybotAnimator.prototype.onPlaybackDirectionChanged = function () {
+Animator.prototype.onPlaybackDirectionChanged = function () {
   const { playbackDirection, _animation, _animationSpeed } = this;
   if (playbackDirection === Forward) {
     _animation.currentTime = 0;
