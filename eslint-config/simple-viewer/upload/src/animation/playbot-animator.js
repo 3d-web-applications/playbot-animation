@@ -33,22 +33,26 @@ PlaybotAnimator.prototype.update = defaultUpdate;
 PlaybotAnimator.prototype.startIdleAnimation = function () {
   const { _animation, _blendTime } = this;
   _animation.play('Playbot_idle', _blendTime);
+  _animation.loop = true;
 };
 
 PlaybotAnimator.prototype.startRunAnimation = function () {
   const { _animation, _blendTime } = this;
   _animation.play('Playbot_run', _blendTime);
+  _animation.loop = true;
 };
 
 PlaybotAnimator.prototype.startJumpAnimation = function () {
   const { _animation, _blendTime } = this;
   _animation.play('Playbot_jump', _blendTime);
+  _animation.loop = false;
   this.update = this.jumpAnimation;
 };
 
 PlaybotAnimator.prototype.startDieAnimation = function () {
   const { _animation, _blendTime } = this;
   _animation.play('Playbot_die', _blendTime);
+  _animation.loop = false;
 };
 
 PlaybotAnimator.prototype.getCurrentDuration = function () {

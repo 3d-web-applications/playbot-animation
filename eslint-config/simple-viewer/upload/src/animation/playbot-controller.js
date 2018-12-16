@@ -19,6 +19,13 @@ PlaybotController.attributes.add('_translationSpeed', {
   description: 'Speed to move forward/backward',
 });
 
+PlaybotController.attributes.add('_turnSpeed', {
+  type: 'number',
+  default: 0.5,
+  title: 'Turn Speed',
+  description: 'Forward speed while turning around',
+});
+
 PlaybotController.attributes.add('_rotationSpeed', {
   type: 'number',
   default: 1,
@@ -65,6 +72,8 @@ PlaybotController.prototype.initialize = function () {
 
   this._playbotAnimator.animation = this._playbotEntity.animation;
 
+  this.enterIdleState();
+
   // this._playbotKeyoardInput.registerFunction(pc.KEY_UP, this._playbotAnimator.startIdleAnimation, this._playbotAnimator);
   // this._playbotKeyoardInput.registerFunction(pc.KEY_LEFT, this._playbotAnimator.startRunAnimation, this._playbotAnimator);
 
@@ -99,57 +108,65 @@ PlaybotController.prototype.update = function (dt) {
   const backward = !this.keyboard.isPressed(pc.KEY_UP) && this.keyboard.isPressed(pc.KEY_DOWN);
   const left = this.keyboard.isPressed(pc.KEY_LEFT) && !this.keyboard.isPressed(pc.KEY_RIGHT);
   const right = !this.keyboard.isPressed(pc.KEY_LEFT) && this.keyboard.isPressed(pc.KEY_RIGHT);
+  const isTurningAround = left || right;
 
-  if (forward) {
-    this._playbotEntity.translate(0, 0, this._translationSpeed * dt);
-    this.startRunning();
-  }
-  if (backward) {
-    this._playbotEntity.translate(0, 0, -this._translationSpeed * dt);
-    this.startRunning();
-  }
   if (left) {
-    this._playbotEntity.rotate(0, this._rotationSpeed * dt, 0);
+    this._playbotEntity.translateLocal(0, 0, this._turnSpeed * dt);
+    this._playbotEntity.rotateLocal(0, this._rotationSpeed * dt, 0);
+    // this.enterRunningState();
   }
   if (right) {
-    this._playbotEntity.rotate(0, -this._rotationSpeed * dt, 0);
+    this._playbotEntity.translateLocal(0, 0, this._turnSpeed * dt);
+    this._playbotEntity.rotateLocal(0, -this._rotationSpeed * dt, 0);
+    // this.enterRunningState();
   }
 
-  const standing = !this.keyboard.isPressed(pc.KEY_UP)
-    && !this.keyboard.isPressed(pc.KEY_DOWN)
-    && !this.keyboard.isPressed(pc.KEY_LEFT)
-    && !this.keyboard.isPressed(pc.KEY_RIGHT);
-
-  if (standing) {
-    this.enterIdleState();
+  if (forward && !isTurningAround) {
+    this._playbotEntity.translateLocal(0, 0, this._translationSpeed * dt);
+    // this.enterRunningState();
   }
+  if (backward && !isTurningAround) {
+    this._playbotEntity.translateLocal(0, 0, -this._translationSpeed * dt);
+    // this.enterRunningState();
+  }
+  
+  /* if (left || right) {
+    if (forward) this.enterRunningState(); else this.enterIdleState();
+  } */
+
+  const isMoving = this.keyboard.isPressed(pc.KEY_UP)
+    || this.keyboard.isPressed(pc.KEY_DOWN)
+    || this.keyboard.isPressed(pc.KEY_LEFT)
+    || this.keyboard.isPressed(pc.KEY_RIGHT);
+
+  if (isMoving) this.enterRunningState(); else this.enterIdleState();
 };
 
 PlaybotController.prototype.enterIdleState = function () {
   this.state = PlaybotController.Idle;
 };
 
-PlaybotController.prototype.startRunning = function () {
+PlaybotController.prototype.enterRunningState = function () {
   this.state = PlaybotController.Run;
 };
 
-PlaybotController.prototype.stopRunning = function () {
+PlaybotController.prototype.exitRunningState = function () {
   this.state = this.state & ~PlaybotController.Run;
 };
 
-PlaybotController.prototype.startJumping = function () {
+PlaybotController.prototype.enterJumpState = function () {
   this.state = PlaybotController.Jump;
 };
 
-PlaybotController.prototype.stopJumping = function () {
+PlaybotController.prototype.exitJumpState = function () {
   this.state = this.state & ~PlaybotController.Jump;
 };
 
-PlaybotController.prototype.startDying = function () {
+PlaybotController.prototype.enterDieState = function () {
   this.state = PlaybotController.Die;
 };
 
-PlaybotController.prototype.stopDying = function () {
+PlaybotController.prototype.exitDieState = function () {
   this.state = this.state & ~PlaybotController.Die;
 };
 
