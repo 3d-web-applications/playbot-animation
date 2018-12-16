@@ -1,16 +1,16 @@
 const PlayerInput = pc.createScript('PlayerInput');
 
-PlayerInput.attributes.add('_playbotEntity', {
+PlayerInput.attributes.add('_characterControllerEntity', {
   type: 'entity',
-  title: 'Playbot Entity',
-  description: 'Entity with an animation component',
+  title: 'Character Controller',
+  description: 'Entity with a character controller script',
 });
 
 PlayerInput.prototype._controller = null;
 
 PlayerInput.prototype.initialize = function () {
   this._keyboard = new pc.Keyboard(window);
-  this._controller = this._playbotEntity.script.PlaybotController;
+  this._controller = this._characterControllerEntity.script.CharacterController;
 };
 
 PlayerInput.prototype.update = function (dt) {
