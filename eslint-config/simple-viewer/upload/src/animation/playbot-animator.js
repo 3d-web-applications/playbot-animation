@@ -1,4 +1,5 @@
 import defaultUpdate from '../utils/default-update-function';
+import { Forward, Backward } from './animation-states';
 
 const PlaybotAnimator = pc.createScript('PlaybotAnimator');
 
@@ -17,6 +18,7 @@ PlaybotAnimator.attributes.add('_blendTime', {
 });
 
 PlaybotAnimator.prototype._animation = null;
+PlaybotAnimator.prototype._playbackDirection = null;
 
 Object.defineProperty(PlaybotAnimator.prototype, 'animation', {
   get() {
@@ -28,30 +30,47 @@ Object.defineProperty(PlaybotAnimator.prototype, 'animation', {
   },
 });
 
+Object.defineProperty(PlaybotAnimator.prototype, 'playbackDirection', {
+  get() {
+    return this._playbackDirection;
+  },
+
+  set(value) {
+    if (this._playbackDirection === value) {
+      return;
+    }
+    this._playbackDirection = value;
+  },
+});
+
 PlaybotAnimator.prototype.update = defaultUpdate;
 
-PlaybotAnimator.prototype.startIdleAnimation = function () {
+PlaybotAnimator.prototype.startIdleAnimation = function (reverse) {
   const { _animation, _blendTime } = this;
   _animation.play('Playbot_idle', _blendTime);
+  this.playbackDirection = (reverse) ? Backward : Forward;
   _animation.loop = true;
 };
 
-PlaybotAnimator.prototype.startRunAnimation = function () {
-  const { _animation, _blendTime } = this;
+PlaybotAnimator.prototype.startRunAnimation = function (reverse) {
+  const { _animation, _blendTime/* , _animationSpeed */ } = this;
   _animation.play('Playbot_run', _blendTime);
+  this.playbackDirection = (reverse) ? Backward : Forward;
   _animation.loop = true;
 };
 
-PlaybotAnimator.prototype.startJumpAnimation = function () {
+PlaybotAnimator.prototype.startJumpAnimation = function (reverse) {
   const { _animation, _blendTime } = this;
   _animation.play('Playbot_jump', _blendTime);
+  this.playbackDirection = (reverse) ? Backward : Forward;
   _animation.loop = false;
   this.update = this.jumpAnimation;
 };
 
-PlaybotAnimator.prototype.startDieAnimation = function () {
+PlaybotAnimator.prototype.startDieAnimation = function (reverse) {
   const { _animation, _blendTime } = this;
   _animation.play('Playbot_die', _blendTime);
+  this.playbackDirection = (reverse) ? Backward : Forward;
   _animation.loop = false;
 };
 
@@ -73,4 +92,15 @@ PlaybotAnimator.prototype.jumpAnimation = function (/* dt */) {
   }
 
   this.update = defaultUpdate;
+};
+
+PlaybotAnimator.prototype.onPlaybackDirectionChanged = function () {
+  const { playbackDirection, _animation, _animationSpeed } = this;
+  if (playbackDirection === Forward) {
+    _animation.currentTime = 0;
+    _animation.speed = _animationSpeed;
+  } else {
+    _animation.currentTime = _animation.duration - 0.01;
+    _animation.speed = -_animationSpeed;
+  }
 };

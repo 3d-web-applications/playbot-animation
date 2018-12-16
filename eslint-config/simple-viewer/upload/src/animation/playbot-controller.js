@@ -1,3 +1,8 @@
+import { Forward, Backward } from './animation-states';
+import {
+  Idle, Run, Jump, Die, RunAndJump,
+} from '../player/player-states';
+
 const PlaybotController = pc.createScript('PlaybotController');
 
 PlaybotController.attributes.add('_playbotEntity', {
@@ -38,12 +43,6 @@ PlaybotController.prototype._playbotJump = null;
 PlaybotController.prototype._playbotKeyoardInput = null;
 PlaybotController.prototype._state = null;
 
-PlaybotController.Idle = 0;
-PlaybotController.Run = 1;
-PlaybotController.Jump = 2;
-PlaybotController.Die = 4;
-PlaybotController.RunAndJump = PlaybotController.Run & PlaybotController.Jump;
-
 Object.defineProperty(PlaybotController.prototype, 'state', {
   get() {
     return this._state;
@@ -72,34 +71,9 @@ PlaybotController.prototype.initialize = function () {
 
   this._playbotAnimator.animation = this._playbotEntity.animation;
 
-  this.enterIdleState();
-
-  // this._playbotKeyoardInput.registerFunction(pc.KEY_UP, this._playbotAnimator.startIdleAnimation, this._playbotAnimator);
-  // this._playbotKeyoardInput.registerFunction(pc.KEY_LEFT, this._playbotAnimator.startRunAnimation, this._playbotAnimator);
-
-  // this._playbotKeyoardInput.registerFunction(pc.KEY_RIGHT, this._playbotAnimator.startJumpAnimation, this._playbotAnimator);
-  // this._playbotKeyoardInput.registerFunction(pc.KEY_DOWN, this._playbotAnimator.startDieAnimation, this._playbotAnimator);
-
-  /* this._playbotKeyoardInput.registerFunction(pc.KEY_UP, this._moveForward, this);
-  this._playbotKeyoardInput.registerFunction(pc.KEY_DOWN, this._moveBackward, this);
-  this._playbotKeyoardInput.registerFunction(pc.KEY_LEFT, this._rotateLeft, this);
-  this._playbotKeyoardInput.registerFunction(pc.KEY_RIGHT, this._rotateRight, this); */
-
-  /* his._playbotKeyoardInput.registerKeyDown(pc.KEY_UP, this.startRunning, this);
-  //this._playbotKeyoardInput.registerKeyDown(pc.KEY_DOWN, this._moveBackward, this);
-  // this._playbotKeyoardInput.registerKeyDown(pc.KEY_LEFT, this._rotateLeft, this);
-  // this._playbotKeyoardInput.registerKeyDown(pc.KEY_RIGHT, this._rotateRight, this);
-  this._playbotKeyoardInput.registerKeyDown(pc.KEY_SPACE, this.startJumping, this);
-  this._playbotKeyoardInput.registerKeyDown(pc.KEY_ENTER, this.startDying, this);
-
-  this._playbotKeyoardInput.registerKeyUp(pc.KEY_UP, this.stopRunning, this);
-  //this._playbotKeyoardInput.registerKeyUp(pc.KEY_DOWN, this._moveBackward, this);
-  // this._playbotKeyoardInput.registerKeyUp(pc.KEY_LEFT, this._rotateLeft, this);
-  // this._playbotKeyoardInput.registerKeyUp(pc.KEY_RIGHT, this._rotateRight, this);
-  this._playbotKeyoardInput.registerKeyUp(pc.KEY_SPACE, this.stopJumping, this);
-  this._playbotKeyoardInput.registerKeyUp(pc.KEY_ENTER, this.stopDying, this); */
-
   this.keyboard = new pc.Keyboard(window);
+
+  this.enterIdleState();
 };
 
 PlaybotController.prototype.update = function (dt) {
@@ -129,7 +103,7 @@ PlaybotController.prototype.update = function (dt) {
     this._playbotEntity.translateLocal(0, 0, -this._translationSpeed * dt);
     // this.enterRunningState();
   }
-  
+
   /* if (left || right) {
     if (forward) this.enterRunningState(); else this.enterIdleState();
   } */
@@ -143,23 +117,23 @@ PlaybotController.prototype.update = function (dt) {
 };
 
 PlaybotController.prototype.enterIdleState = function () {
-  this.state = PlaybotController.Idle;
+  this.state = Idle;
 };
 
 PlaybotController.prototype.enterRunningState = function () {
-  this.state = PlaybotController.Run;
+  this.state = Run;
 };
 
 PlaybotController.prototype.exitRunningState = function () {
-  this.state = this.state & ~PlaybotController.Run;
+  this.state = this.state & ~Run;
 };
 
 PlaybotController.prototype.enterJumpState = function () {
-  this.state = PlaybotController.Jump;
+  this.state = Jump;
 };
 
 PlaybotController.prototype.exitJumpState = function () {
-  this.state = this.state & ~PlaybotController.Jump;
+  this.state = this.state & ~Jump;
 };
 
 PlaybotController.prototype.enterDieState = function () {
@@ -167,23 +141,24 @@ PlaybotController.prototype.enterDieState = function () {
 };
 
 PlaybotController.prototype.exitDieState = function () {
-  this.state = this.state & ~PlaybotController.Die;
+  this.state = this.state & ~Die;
 };
 
 PlaybotController.prototype._onStateChanged = function () {
-  if (this._state === PlaybotController.JumpAndRun) {
-    this._playbotAnimator.startJumpAnimation();
+  console.log(this._state, RunAndJump);
+  if (this._state === RunAndJump) {
+    this._playbotAnimator.startJumpAnimation(Forward);
   }
-  if (this.state === PlaybotController.Idle) {
-    this._playbotAnimator.startIdleAnimation();
+  if (this.state === Idle) {
+    this._playbotAnimator.startIdleAnimation(Forward);
   }
-  if (this._state === PlaybotController.Run) {
-    this._playbotAnimator.startRunAnimation();
+  if (this._state === Run) {
+    this._playbotAnimator.startRunAnimation(Forward);
   }
-  if (this._state === PlaybotController.Jump) {
-    this._playbotAnimator.startJumpAnimation();
+  if (this._state === Jump) {
+    this._playbotAnimator.startJumpAnimation(Forward);
   }
-  if (this._state === PlaybotController.Die) {
-    this._playbotAnimator.startDieAnimation();
+  if (this._state === Die) {
+    this._playbotAnimator.startDieAnimation(Forward);
   }
 };
