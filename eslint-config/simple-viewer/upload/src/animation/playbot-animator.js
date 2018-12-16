@@ -2,11 +2,11 @@ import defaultUpdate from '../utils/default-update-function';
 
 const PlaybotAnimator = pc.createScript('PlaybotAnimator');
 
-PlaybotAnimator.attributes.add('_playbotEntity', {
+/*PlaybotAnimator.attributes.add('_playbotEntity', {
   type: 'entity',
   title: 'Playbot Entity',
   description: 'Entity with an animation component',
-});
+});*/
 
 PlaybotAnimator.attributes.add('_animationSpeed', {
   type: 'number',
@@ -24,15 +24,26 @@ PlaybotAnimator.attributes.add('_blendTime', {
 
 PlaybotAnimator.prototype._animation = null;
 
-PlaybotAnimator.prototype.initialize = function () {
+Object.defineProperty(PlaybotAnimator.prototype, 'animation', {
+  get() {
+    return this._animation;
+  },
+
+  set(value) {
+    this._animation = value;
+  },
+});
+
+/*PlaybotAnimator.prototype.initialize = function () {
   this._animation = this._playbotEntity.animation;
-};
+};*/
 
 PlaybotAnimator.prototype.update = defaultUpdate;
 
 PlaybotAnimator.prototype.startIdleAnimation = function () {
   const { _animation, _blendTime } = this;
   _animation.play('Playbot_idle', _blendTime);
+  console.log('startIdleAnimation');
 };
 
 PlaybotAnimator.prototype.startRunAnimation = function () {

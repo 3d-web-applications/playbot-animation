@@ -1,6 +1,6 @@
 const PlaybotKeyboardInput = pc.createScript('PlaybotKeyboardInput');
 
-PlaybotKeyboardInput.prototype._playbotAnimator = null;
+/* PlaybotKeyboardInput.prototype._playbotAnimator = null;
 PlaybotKeyboardInput.prototype._playbotJump = null;
 
 PlaybotKeyboardInput.prototype.initialize = function () {
@@ -35,4 +35,32 @@ PlaybotKeyboardInput.prototype._onKeyDown = function (event) {
   }
 
   event.event.preventDefault();
+}; */
+
+PlaybotKeyboardInput.prototype._functionRegister = {};
+
+PlaybotKeyboardInput.prototype.initialize = function () {
+  this.app.keyboard.on(pc.EVENT_KEYDOWN, this._onKeyDown, this);
+};
+
+PlaybotKeyboardInput.prototype._onKeyDown = function (event) {
+  const { _functionRegister } = this;
+  const keys = Object.keys(_functionRegister);
+  keys.forEach((key) => {
+    if (event.key.toString() === key) {
+      const subscribers = _functionRegister[key];
+      subscribers.forEach((func) => {
+        func();
+      });
+    }
+  });
+};
+
+PlaybotKeyboardInput.prototype.registerFunction = function (key, callback, scope) {
+  const func = callback.bind(scope);
+  if (this._functionRegister[key]) {
+    this._functionRegister[key].push(func);
+  } else {
+    this._functionRegister[key] = [func];
+  }
 };
