@@ -1,113 +1,56 @@
 import defaultUpdate from '../utils/default-update-function';
-import { Forward, Backward } from './animation-states';
+import { prototype, attributes } from './animator';
 
-const Animator = pc.createScript('Animator');
+let PlaybotAnimator = pc.createScript('PlaybotAnimator');
 
-Animator.attributes.add('_animationSpeed', {
-  type: 'number',
-  title: 'Start Animation Speed',
-  default: 1,
-  description: 'Set default animation speed',
+attributes.forEach((attribute) => {
+  PlaybotAnimator.attributes.add(attribute.name, attribute.object);
 });
 
-Animator.attributes.add('_blendTime', {
-  type: 'number',
-  title: 'Blend Time',
-  default: 0,
-  description: 'Time to blend between animations',
-});
+//PlaybotAnimator.prototype = Object.assign(PlaybotAnimator.prototype, prototype);
+//PlaybotAnimator = { ...PlaybotAnimator.prototype, prototype };
+//PlaybotAnimator.prototype = ...prototype;
+//console.log(PlaybotAnimator.prototype);
 
-Animator.prototype._animation = null;
-Animator.prototype._playbackDirection = null;
+PlaybotAnimator.prototype.update = defaultUpdate;
 
-Object.defineProperty(Animator.prototype, 'animation', {
+/* Object.defineProperty(PlaybotAnimator.prototype, 'animator', {
   get() {
-    return this._animation;
-  },
-
-  set(value) {
-    this._animation = value;
+    return this.entity.script[Animator];
   },
 });
 
-Object.defineProperty(Animator.prototype, 'playbackDirection', {
+Object.defineProperty(PlaybotAnimator.prototype, 'animation', {
   get() {
-    return this._playbackDirection;
+    return this.entity.script[Animator];
   },
+}); */
 
-  set(value) {
-    if (this._playbackDirection === value) {
-      return;
-    }
-    this._playbackDirection = value;
-  },
-});
-
-Animator.prototype.update = defaultUpdate;
-
-Animator.prototype.startAnimation = function (animationName, reverse, loop) {
-  const { _animation, _blendTime } = this;
-  _animation.play(animationName, _blendTime);
-  this.playbackDirection = (reverse) ? Backward : Forward;
-  _animation.loop = loop;
+PlaybotAnimator.prototype.initialize = function () {
+  console.log(this.animator);
 };
 
-Animator.prototype.startIdleAnimation = function (reverse) {
-  const { _animation, _blendTime } = this;
-  _animation.play('Playbot_idle', _blendTime);
-  this.playbackDirection = (reverse) ? Backward : Forward;
-  _animation.loop = true;
+PlaybotAnimator.prototype.startIdleAnimation = function (reverse) {
+  this.startAnimation('Playbot_idle', reverse, true);
 };
 
-Animator.prototype.startRunAnimation = function (reverse) {
-  const { _animation, _blendTime/* , _animationSpeed */ } = this;
-  _animation.play('Playbot_run', _blendTime);
-  this.playbackDirection = (reverse) ? Backward : Forward;
-  _animation.loop = true;
+PlaybotAnimator.prototype.startRunAnimation = function (reverse) {
+  this.startAnimation('Playbot_run', reverse, true);
 };
 
-Animator.prototype.startJumpAnimation = function (reverse) {
-  const { _animation, _blendTime } = this;
-  _animation.play('Playbot_jump', _blendTime);
-  this.playbackDirection = (reverse) ? Backward : Forward;
-  _animation.loop = false;
+PlaybotAnimator.prototype.startJumpAnimation = function (reverse) {
+  this.startAnimation('Playbot_jump', reverse, true);
   this.update = this.jumpAnimation;
 };
 
-Animator.prototype.startDieAnimation = function (reverse) {
-  const { _animation, _blendTime } = this;
-  _animation.play('Playbot_die', _blendTime);
-  this.playbackDirection = (reverse) ? Backward : Forward;
-  _animation.loop = false;
+PlaybotAnimator.prototype.startDieAnimation = function (reverse) {
+  this.startAnimation('Playbot_die', reverse, false);
 };
 
-Animator.prototype.getCurrentDuration = function () {
-  return this._animation.duration;
-};
-
-Animator.prototype.getCurrentTime = function () {
-  return this._animation.currentTime;
-};
-
-Animator.prototype.getAnimationProgress = function () {
-  return this.getCurrentTime() / this.getCurrentDuration();
-};
-
-Animator.prototype.jumpAnimation = function (/* dt */) {
+PlaybotAnimator.prototype.jumpAnimation = function (/* dt */) {
   if (this.getAnimationProgress() < 1.0) {
     return;
   }
 
   this.update = defaultUpdate;
-};
-
-Animator.prototype.onPlaybackDirectionChanged = function () {
-  const { playbackDirection, _animation, _animationSpeed } = this;
-  if (playbackDirection === Forward) {
-    _animation.currentTime = 0;
-    _animation.speed = _animationSpeed;
-  } else {
-    _animation.currentTime = _animation.duration - 0.01;
-    _animation.speed = -_animationSpeed;
-  }
 };
