@@ -9,9 +9,8 @@
 const allowInheritance = function (fn, attributes) {
   return function (...args) {
     try {
-      console.log(args);
-      const [name, ...rest] = args;
-      attributes.push({ name, rest });
+      const [name, object] = args;
+      attributes.push({ name, object });
       return fn.apply(this, args);
     } catch (ex) {
       // console.warning(ex);
