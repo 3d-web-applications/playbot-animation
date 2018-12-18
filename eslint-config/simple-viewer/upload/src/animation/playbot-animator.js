@@ -1,18 +1,14 @@
 import defaultUpdate from '../utils/default-update-function';
 import { prototype, attributes } from './animator';
 
-let PlaybotAnimator = pc.createScript('PlaybotAnimator');
+const PlaybotAnimator = pc.createScript('PlaybotAnimator');
 
 attributes.forEach((attribute) => {
   PlaybotAnimator.attributes.add(attribute.name, attribute.object);
 });
 
-//PlaybotAnimator.prototype = Object.assign(PlaybotAnimator.prototype, prototype);
-//PlaybotAnimator = { ...PlaybotAnimator.prototype, prototype };
-//PlaybotAnimator.prototype = ...prototype;
-//console.log(PlaybotAnimator.prototype);
-
-PlaybotAnimator.prototype.update = defaultUpdate;
+PlaybotAnimator.prototype = Object.assign(PlaybotAnimator.prototype, prototype);
+// PlaybotAnimator = { ...PlaybotAnimator.prototype, prototype };
 
 /* Object.defineProperty(PlaybotAnimator.prototype, 'animator', {
   get() {
@@ -27,8 +23,12 @@ Object.defineProperty(PlaybotAnimator.prototype, 'animation', {
 }); */
 
 PlaybotAnimator.prototype.initialize = function () {
+  console.log(Object.keys(this));
   console.log(this.animator);
+  console.log(this.startIdleAnimation);
 };
+
+PlaybotAnimator.prototype.update = defaultUpdate;
 
 PlaybotAnimator.prototype.startIdleAnimation = function (reverse) {
   this.startAnimation('Playbot_idle', reverse, true);
