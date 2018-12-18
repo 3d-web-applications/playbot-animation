@@ -1,14 +1,61 @@
 import { Forward, Backward } from './animation-states';
+import allowInheritance from '../utils/inherit-attributes';
 
 const Animator = pc.createScript('Animator');
 
-// works only in playcanvas editor but not in preview!
 const attributes = [];
-const { add } = Animator.attributes;
-Animator.attributes.add = (name, object) => {
-  attributes.push({ name, object });
-  add(name, object);
+
+/**
+ * Decorator to store attributes attached to scripts.
+ * @param {Function} fn function to be decorated
+ * @param {Array} attr array of attribute names and their description
+ * @example
+ * Animator.attributes.add = makeSafe(Animator.attributes.add, attributes);
+ */
+/*const makeSafe = function (fn, attr) {
+  return function (...args) {
+    try {
+      attr.push(args);
+      return fn.apply(this, args);
+    } catch (ex) {
+      // console.warning(ex);
+      return null;
+    }
+  };
 };
+
+Animator.attributes.add = makeSafe(Animator.attributes.add, attributes);*/
+
+// works only in playcanvas editor but not in preview!
+
+/*const { add } = Animator.attributes;
+//add.bind(Animator);
+Animator.attributes.add = function (name, object) {
+  console.log(this);
+  attributes.push({ name, object });
+  //Animator.attributes.add(name, object);
+};*/
+/*
+const Add = (name, object) => {
+  attributes.push({ name, object });
+  Animator.attributes.add(name, object);
+};
+
+Add('_animationSpeed', {
+  type: 'number',
+  title: 'Start Animation Speed',
+  default: 1,
+  description: 'Set default animation speed',
+});
+Add('_blendTime', {
+  type: 'number',
+  title: 'Blend Time',
+  default: 0,
+  description: 'Time to blend between animations',
+});*/
+
+console.log(allowInheritance);
+Animator.attributes.add = allowInheritance(Animator.attributes.add, attributes);
 
 Animator.attributes.add('_animationSpeed', {
   type: 'number',
@@ -23,6 +70,8 @@ Animator.attributes.add('_blendTime', {
   default: 0,
   description: 'Time to blend between animations',
 });
+
+console.log(attributes);
 
 Animator.prototype._animation = null;
 Animator.prototype._playbackDirection = null;
@@ -49,6 +98,10 @@ Object.defineProperty(Animator.prototype, 'playbackDirection', {
     this._playbackDirection = value;
   },
 });
+
+Animator.prototype.initialize = function () {
+  console.log(this._animationSpeed, this._blendTime);
+};
 
 Animator.prototype.startAnimation = function (animationName, reverse, loop) {
   const { _animation, _blendTime } = this;
@@ -81,6 +134,6 @@ Animator.prototype.onPlaybackDirectionChanged = function () {
   }
 };
 
-const { prototype } = Animator;
+//const { prototype } = Animator;
 
-export { prototype, attributes };
+//export { prototype, attributes };

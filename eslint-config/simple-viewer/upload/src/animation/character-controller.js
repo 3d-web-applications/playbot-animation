@@ -57,7 +57,9 @@ CharacterController.prototype.initialize = function () {
     return;
   }
 
-  this._playbotAnimator = script.Animator;
+  console.log(script);
+  this._playbotAnimator = script.PlaybotAnimator;
+  console.log(this._playbotAnimator);
   this._playbotAnimator.animation = this._playbotEntity.animation;
 
   this.keyboard = new pc.Keyboard(window);
