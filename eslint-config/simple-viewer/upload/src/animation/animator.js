@@ -46,6 +46,17 @@ Object.defineProperty(Animator.prototype, 'playbackDirection', {
   },
 });
 
+console.log(Object.getOwnPropertyDescriptor(Animator.prototype, 'animation'));
+const descriptors = Object.getOwnPropertyDescriptors(Animator.prototype);
+console.log('descriptors', descriptors);
+const keys = Object.keys(descriptors);
+console.log('keys', keys);
+const protos = Object.keys(Animator.prototype);
+protos.push('constructor');
+console.log('protos', protos);
+const result = keys.filter(element => protos.indexOf(element) === -1);
+console.log('result', result);
+
 Animator.prototype.startAnimation = function (animationName, reverse, loop) {
   const { _animation, _blendTime } = this;
   _animation.play(animationName, _blendTime);
@@ -77,4 +88,4 @@ Animator.prototype.onPlaybackDirectionChanged = function () {
 };
 
 const { prototype } = Animator;
-export { prototype, attributes };
+export { prototype, attributes, Animator };
