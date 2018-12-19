@@ -1,9 +1,9 @@
 import defaultUpdate from '../utils/default-update-function';
 import { Animator, attributes } from './animator';
-import extend from '../utils/extend-from-script';
+import extendScript from '../utils/extend-script';
 
 const PlaybotAnimator = pc.createScript('PlaybotAnimator');
-extend(PlaybotAnimator, Animator, attributes);
+extendScript(PlaybotAnimator, Animator, attributes);
 
 PlaybotAnimator.prototype.initialize = function () {
   this.super();

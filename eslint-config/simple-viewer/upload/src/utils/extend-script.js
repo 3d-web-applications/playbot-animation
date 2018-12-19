@@ -4,11 +4,13 @@
  * @param {Object} parent - Required. The object prototype is used to clone functions and properties.
  * @param {Array} attribute - Optional. Array of attributes which should be displayed in the PlayCanvas editor.
  */
-const extend = (child, parent, attributes) => {
+const extendScript = (child, parent, attributes) => {
   // Without this loop, attributes will still be applied to the child, but they will not show up in the PlayCanvas Editor.
-  attributes.forEach((attribute) => {
-    child.attributes.add(attribute.name, attribute.object);
-  });
+  if (Array.isArray(attributes)) {
+    attributes.forEach((attribute) => {
+      child.attributes.add(attribute.name, attribute.object);
+    });
+  }
 
   /* eslint no-param-reassign: "error" */
   child.prototype = Object.create(
@@ -16,7 +18,9 @@ const extend = (child, parent, attributes) => {
     Object.getOwnPropertyDescriptors(parent.prototype),
   );
 
-  child.prototype.super = parent.prototype.initialize;
+  // Make sure functions to set default states are available
+  child.prototype.super = parent.prototype.initialize || (() => {});
+  child.prototype.superPost = parent.prototype.postInitialize || (() => {});
 };
 
-export default extend;
+export default extendScript;

@@ -1,10 +1,13 @@
 import { Forward, Backward } from './animation-states';
-import allowInheritance from '../utils/inherit-attributes';
+import collectAttributes from '../utils/collect-attributes';
 
 const Animator = pc.createScript('Animator');
 
 const attributes = [];
-Animator.attributes.add = allowInheritance(Animator.attributes.add, attributes);
+Animator.attributes.add = collectAttributes(
+  Animator.attributes.add,
+  attributes,
+);
 
 Animator.attributes.add('_animationSpeed', {
   type: 'number',
