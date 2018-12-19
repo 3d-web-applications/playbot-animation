@@ -7,11 +7,6 @@ extend(PlaybotAnimator, Animator, attributes);
 
 PlaybotAnimator.prototype.initialize = function () {
   this.super();
-  console.log(this._blendTime);
-  console.log(this.animation);
-  console.log(this._animation);
-  console.log(this._playbackDirection);
-  console.log(this.playbackDirection);
 };
 
 PlaybotAnimator.prototype.update = defaultUpdate;

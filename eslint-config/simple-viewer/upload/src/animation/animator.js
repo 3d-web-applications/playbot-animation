@@ -46,11 +46,6 @@ Object.defineProperty(Animator.prototype, 'playbackDirection', {
   },
 });
 
-Animator.prototype.initialize = function () {
-  this._animation = 9;
-  this.playbackDirection = 7;
-};
-
 Animator.prototype.startAnimation = function (animationName, reverse, loop) {
   const { _animation, _blendTime } = this;
   _animation.play(animationName, _blendTime);
