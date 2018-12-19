@@ -1,19 +1,17 @@
 import defaultUpdate from '../utils/default-update-function';
-import { prototype, attributes, Animator } from './animator';
+import { Animator, attributes } from './animator';
+import extend from '../utils/extend-from-script';
 
 const PlaybotAnimator = pc.createScript('PlaybotAnimator');
-
-attributes.forEach((attribute) => {
-  PlaybotAnimator.attributes.add(attribute.name, attribute.object);
-});
-
-PlaybotAnimator.prototype = Object.create(
-  Object.getPrototypeOf(Animator.prototype),
-  Object.getOwnPropertyDescriptors(Animator.prototype),
-);
+extend(PlaybotAnimator, Animator, attributes);
 
 PlaybotAnimator.prototype.initialize = function () {
-  console.log(this);
+  this.super();
+  console.log(this._blendTime);
+  console.log(this.animation);
+  console.log(this._animation);
+  console.log(this._playbackDirection);
+  console.log(this.playbackDirection);
 };
 
 PlaybotAnimator.prototype.update = defaultUpdate;
