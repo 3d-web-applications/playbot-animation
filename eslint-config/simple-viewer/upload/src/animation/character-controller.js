@@ -57,9 +57,7 @@ CharacterController.prototype.initialize = function () {
     return;
   }
 
-  console.log(script);
   this._playbotAnimator = script.PlaybotAnimator;
-  console.log(this._playbotAnimator);
   this._playbotAnimator.animation = this._playbotEntity.animation;
 
   this.keyboard = new pc.Keyboard(window);
@@ -122,7 +120,6 @@ CharacterController.prototype.exitDieState = function () {
 };
 
 CharacterController.prototype._onStateChanged = function () {
-  console.log(this._state, RunAndJump);
   if (this._state === RunAndJump) {
     this._playbotAnimator.startJumpAnimation(Forward);
   }
