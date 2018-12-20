@@ -5,6 +5,8 @@ import extendScript from '../utils/extend-script';
 const PlaybotAnimator = pc.createScript('PlaybotAnimator');
 extendScript(PlaybotAnimator, Animator, attributes);
 
+PlaybotAnimator.prototype.listener = null;
+
 PlaybotAnimator.prototype.initialize = function () {
   this.super();
 };
@@ -20,7 +22,7 @@ PlaybotAnimator.prototype.startRunAnimation = function (reverse) {
 };
 
 PlaybotAnimator.prototype.startJumpAnimation = function (reverse) {
-  this.startAnimation('Playbot_jump', reverse, true);
+  this.startAnimation('Playbot_jump', reverse, false);
   this.update = this.jumpAnimation;
 };
 
@@ -29,9 +31,18 @@ PlaybotAnimator.prototype.startDieAnimation = function (reverse) {
 };
 
 PlaybotAnimator.prototype.jumpAnimation = function (/* dt */) {
-  if (this.getAnimationProgress() < 1.0) {
+  const progress = this.getAnimationProgress();
+  console.log(progress);
+  if (progress < 1.0) {
+    this._onJumpProgressChanged(progress);
     return;
   }
 
+  this._onJumpProgressChanged(1);
+
   this.update = defaultUpdate;
+};
+
+PlaybotAnimator.prototype._onJumpProgressChanged = function (progress) {
+  this.listener.onTimeChanged(progress);
 };

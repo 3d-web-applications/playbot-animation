@@ -20,6 +20,7 @@ PlayerInput.prototype.update = function (dt) {
   const backward = _keyboard.isPressed(pc.KEY_DOWN);
   const left = _keyboard.isPressed(pc.KEY_LEFT);
   const right = _keyboard.isPressed(pc.KEY_RIGHT);
+  const jump = _keyboard.isPressed(pc.KEY_SPACE);
 
   if (left && !right) {
     _controller.moveLeft(dt);
@@ -36,6 +37,9 @@ PlayerInput.prototype.update = function (dt) {
   if (!forward && backward) {
     _controller.moveBackward(dt);
     return;
+  }
+  if (jump) {
+    _controller.enterJumpState();
   }
 
   _controller.doNothing();
