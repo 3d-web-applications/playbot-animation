@@ -4,7 +4,7 @@
   "description": "Template to bundle files and upload them to PlayCanvas projects",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "cross-env NODE_ENV=development webpack --mode development --config webpack.development.config.babel.js",
     "build": "cross-env NODE_ENV=production webpack --mode production --config webpack.production.config.babel.js"
   },
@@ -28,13 +28,16 @@
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-env": "^7.2.0",
     "@babel/register": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
     "cross-env": "^5.2.0",
     "eslint": "^5.10.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-loader": "^2.1.1",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
+    "jest": "^23.6.0",
     "playcanvas-webpack-plugin": "^1.0.8",
     "webpack": "^4.27.1",
     "webpack-cli": "^3.1.2"
