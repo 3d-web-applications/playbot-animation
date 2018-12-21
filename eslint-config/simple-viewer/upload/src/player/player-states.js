@@ -1,7 +1,10 @@
-const Idle = 0;
-const Run = 1;
-const Jump = 2;
-const Die = 4;
+
+import { createBitmask } from '../utils/create-bitmask';
+
+const {
+  Idle, Run, Jump, Die,
+} = createBitmask('Idle', 'Run', 'Jump', 'Die');
+
 const RunAndJump = Run | Jump;
 
 export {
