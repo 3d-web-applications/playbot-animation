@@ -15,21 +15,22 @@ MainLoop.prototype.initialize = function () {
     this.addController = MainLoop.instance.addController;
     this.addAnimator = MainLoop.instance.addAnimator;
     this.enabled = false;
+    return;
   }
 
   MainLoop.instance = this;
 };
 
-MainLoop.prototype.addUserInput = function (script) {
-  return (!script) ? -1 : addToRegistry(script.syncedUpdate, this._userInputs);
+MainLoop.prototype.addUserInput = function (fn) {
+  return addToRegistry(fn, this._userInputs);
 };
 
-MainLoop.prototype.addController = function (script) {
-  return (!script) ? -1 : addToRegistry(script.syncedUpdate, this._controllers);
+MainLoop.prototype.addController = function (fn) {
+  return addToRegistry(fn, this._controllers);
 };
 
-MainLoop.prototype.addAnimator = function (script) {
-  return (!script) ? -1 : addToRegistry(script.syncedUpdate, this._animators);
+MainLoop.prototype.addAnimator = function (fn) {
+  return addToRegistry(fn, this._animators);
 };
 
 MainLoop.prototype.update = function (dt) {
@@ -42,4 +43,14 @@ MainLoop.prototype.update = function (dt) {
   this._animators.forEach((syncedUpdate) => {
     syncedUpdate(dt);
   });
+};
+
+const addUserInput = script => MainLoop.instance.addUserInput(script);
+const addController = script => MainLoop.instance.addController(script);
+const addAnimator = script => MainLoop.instance.addAnimator(script);
+
+export {
+  addUserInput,
+  addController,
+  addAnimator,
 };

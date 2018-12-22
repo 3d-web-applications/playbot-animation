@@ -1,3 +1,5 @@
+import { addUserInput } from '../utils/main-loop';
+
 const PlayerInput = pc.createScript('PlayerInput');
 
 PlayerInput.attributes.add('_characterControllerEntity', {
@@ -14,7 +16,13 @@ PlayerInput.prototype.initialize = function () {
   this._player = this.entity.script.PlayerController;
 };
 
-PlayerInput.prototype.update = function (dt) {
+PlayerInput.prototype.postInitialize = function () {
+  console.log('postInitialize');
+  addUserInput(this.syncedUpdate.bind(this));
+};
+
+// PlayerInput.prototype.update = function (dt)
+PlayerInput.prototype.syncedUpdate = function (dt) {
   // Important note: this.app.keyboard.on(pc.EVENT_KEYDOWN, ..., this) would work, but its not smooth enough
   const { _keyboard, _controller, _player } = this;
   const forward = _keyboard.isPressed(pc.KEY_UP);
