@@ -51,6 +51,8 @@ CharacterController.prototype._playbotAnimator = null;
 CharacterController.prototype._state = null;
 CharacterController.prototype._playerController = null;
 CharacterController.prototype._timeInAir = 0;
+CharacterController.prototype._takeoffHeight = null;
+CharacterController.prototype._currentGroundDistance = null;
 
 Object.defineProperty(CharacterController.prototype, 'state', {
   get() {
@@ -78,7 +80,10 @@ CharacterController.prototype.initialize = function () {
   this._playbotAnimator.animation = this._playbotEntity.animation;
   this._playerController = script.PlayerController;
 
-  this.keyboard = new pc.Keyboard(window);
+  // this.keyboard = new pc.Keyboard(window);
+
+  this._takeoffHeight = 0;
+  this._currentGroundDistance = 0;
 
   this.enterIdleState();
 };
@@ -133,13 +138,13 @@ CharacterController.prototype.moveBackward = function (dt) {
 CharacterController.prototype.jump = function (dt) {
   if (this._timeInAir === 0) {
     this.enterJumpState();
-    this.onTimeChanged(this._playbotAnimator.getAnimationProgress());
+    // this.onTimeChanged(this._playbotAnimator.getAnimationProgress());
     this._timeInAir += dt;
     return;
   }
 
   this._timeInAir += dt;
-  this.onTimeChanged(this._playbotAnimator.getAnimationProgress());
+  // this.onTimeChanged(this._playbotAnimator.getAnimationProgress());
 
   if (this._timeInAir >= 5) {
     this.exitJumpState();
