@@ -25,6 +25,7 @@ Animator.attributes.add('_blendTime', {
 
 Animator.prototype._animation = null;
 Animator.prototype._playbackDirection = null;
+Animator.prototype._time = 0;
 
 Object.defineProperty(Animator.prototype, 'animation', {
   get() {
@@ -48,6 +49,25 @@ Object.defineProperty(Animator.prototype, 'playbackDirection', {
     this._playbackDirection = value;
   },
 });
+
+Object.defineProperty(Animator.prototype, 'time', {
+  get() {
+    return this._time;
+  },
+
+  set(value) {
+    const clampedTime = pc.math.clamp(0, this.getCurrentDuration(), value);
+    if (this._time === clampedTime) {
+      return;
+    }
+
+    this._time = clampedTime;
+  },
+});
+
+Animator.prototype.initialize = function () {
+  this._animation.speed = 0;
+};
 
 Animator.prototype.startAnimation = function (animationName, reverse, loop) {
   const { _blendTime } = this;
