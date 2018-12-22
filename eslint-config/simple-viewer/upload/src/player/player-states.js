@@ -1,12 +1,13 @@
 
 import { createBitmask } from '../utils/create-bitmask';
 
-const {
-  Idle, Run, Jump, Die,
-} = createBitmask('Idle', 'Run', 'Jump', 'Die');
+const PlayerState = createBitmask(
+  'Idle',
+  'Forward',
+  'Backward',
+  'Left',
+  'Right',
+  'OnGround',
+);
 
-const RunAndJump = Run | Jump;
-
-export {
-  Idle, Run, Jump, Die, RunAndJump,
-};
+export { PlayerState };
