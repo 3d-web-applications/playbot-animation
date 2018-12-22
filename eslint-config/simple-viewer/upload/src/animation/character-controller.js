@@ -1,7 +1,9 @@
-import { Forward, Backward } from './animation-states';
+import { addController } from '../utils/main-loop';
+import { PlayerState } from '../player/player-states';
+
 import {
-  Idle, Run, Jump, Die, RunAndJump,
-} from '../player/player-states';
+  Forward, Backward, Idle, Run, Jump, Die, RunAndJump,
+} from './animation-states';
 
 const CharacterController = pc.createScript('CharacterController');
 
@@ -34,6 +36,7 @@ CharacterController.attributes.add('_rotationSpeed', {
 
 CharacterController.prototype._playbotAnimator = null;
 CharacterController.prototype._state = null;
+CharacterController.prototype._playerController = null;
 
 Object.defineProperty(CharacterController.prototype, 'state', {
   get() {
@@ -59,10 +62,36 @@ CharacterController.prototype.initialize = function () {
 
   this._playbotAnimator = script.PlaybotAnimator;
   this._playbotAnimator.animation = this._playbotEntity.animation;
+  this._playerController = script.PlayerController;
 
   this.keyboard = new pc.Keyboard(window);
 
   this.enterIdleState();
+};
+
+CharacterController.prototype.postInitialize = function () {
+  addController(this.syncedUpdate.bind(this));
+};
+
+CharacterController.prototype.syncedUpdate = function (dt) {
+  this._checkPlayerState(dt);
+};
+
+CharacterController.prototype._checkPlayerState = function (dt) {
+  const { state } = this._playerController;
+  if (state & PlayerState.OnGround) {
+    // this.syncedUpdate = ;
+  } else if (state & PlayerState.Forward) {
+    this.moveForward(dt);
+  } else if (state & PlayerState.Backward) {
+    this.moveBackward(dt);
+  } else if (state & PlayerState.Left) {
+    this.moveLeft(dt);
+  } else if (state & PlayerState.Right) {
+    this.moveRight(dt);
+  } else {
+    this.doNothing(dt);
+  }
 };
 
 CharacterController.prototype.moveLeft = function (dt) {
@@ -85,6 +114,10 @@ CharacterController.prototype.moveForward = function (dt) {
 CharacterController.prototype.moveBackward = function (dt) {
   this._playbotEntity.translateLocal(0, 0, -this._translationSpeed * dt);
   this.enterRunningState();
+};
+
+CharacterController.prototype.jump = function () {
+  this.enterJumpState();
 };
 
 CharacterController.prototype.doNothing = function () {
