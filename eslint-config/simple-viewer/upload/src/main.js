@@ -1,3 +1,4 @@
+import './utils/main-loop';
 import './camera/orbit-camera';
 import './input/mouse-input';
 import './input/touch-input';
