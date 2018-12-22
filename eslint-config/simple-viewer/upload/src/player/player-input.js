@@ -17,7 +17,6 @@ PlayerInput.prototype.initialize = function () {
 };
 
 PlayerInput.prototype.postInitialize = function () {
-  console.log('postInitialize');
   addUserInput(this.syncedUpdate.bind(this));
 };
 
