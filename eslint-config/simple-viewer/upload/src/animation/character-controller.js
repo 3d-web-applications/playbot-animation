@@ -34,9 +34,23 @@ CharacterController.attributes.add('_rotationSpeed', {
   description: 'Speed to turn left/right',
 });
 
+CharacterController.attributes.add('_jumpTransition', {
+  type: 'curve',
+  default: {
+    keys: [
+      0.0, 0.0,
+      0.5, 1.0,
+      1.0, 0.0,
+    ],
+  },
+  title: 'Jump Transition',
+  description: 'Height change over time',
+});
+
 CharacterController.prototype._playbotAnimator = null;
 CharacterController.prototype._state = null;
 CharacterController.prototype._playerController = null;
+CharacterController.prototype._timeInAir = 0;
 
 Object.defineProperty(CharacterController.prototype, 'state', {
   get() {
@@ -80,7 +94,7 @@ CharacterController.prototype.syncedUpdate = function (dt) {
 CharacterController.prototype._checkPlayerState = function (dt) {
   const { state } = this._playerController;
   if (state & PlayerState.OnGround) {
-    // this.syncedUpdate = ;
+    this.jump(dt);
   } else if (state & PlayerState.Forward) {
     this.moveForward(dt);
   } else if (state & PlayerState.Backward) {
@@ -116,8 +130,30 @@ CharacterController.prototype.moveBackward = function (dt) {
   this.enterRunningState();
 };
 
-CharacterController.prototype.jump = function () {
-  this.enterJumpState();
+CharacterController.prototype.jump = function (dt) {
+  if (this._timeInAir === 0) {
+    this.enterJumpState();
+    this.onTimeChanged(this._playbotAnimator.getAnimationProgress());
+    this._timeInAir += dt;
+    return;
+  }
+
+  this._timeInAir += dt;
+  this.onTimeChanged(this._playbotAnimator.getAnimationProgress());
+
+  if (this._timeInAir >= 5) {
+    this.exitJumpState();
+  }
+};
+
+CharacterController.prototype.onTimeChanged = function (normalizedTime) {
+  const position = this._playbotEntity.getPosition();
+  console.log('onTimeChanged', normalizedTime, this._jumpTransition.value(normalizedTime));
+  this._playbotEntity.setPosition(
+    position.x,
+    this._jumpTransition.value(normalizedTime),
+    position.z,
+  );
 };
 
 CharacterController.prototype.doNothing = function () {
@@ -138,10 +174,13 @@ CharacterController.prototype.exitRunningState = function () {
 
 CharacterController.prototype.enterJumpState = function () {
   this.state = Jump;
+  this._timeInAir = 0;
 };
 
 CharacterController.prototype.exitJumpState = function () {
   this.state = this.state & ~Jump;
+  this._timeInAir = 0;
+  this._playerController._state &= ~PlayerState.Jump;
 };
 
 CharacterController.prototype.enterDieState = function () {

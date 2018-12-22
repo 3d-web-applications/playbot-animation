@@ -54,7 +54,7 @@ Animator.prototype.startAnimation = function (animationName, reverse, loop) {
   this._animation.play(animationName, _blendTime);
   this.playbackDirection = (reverse) ? Backward : Forward;
   this._animation.loop = loop;
-  console.log(this._animation.loop); // TODO jumping set to false and directly afterwards back to true 
+  console.log(this._animation.loop); // TODO jumping set to false and directly afterwards back to true
 };
 
 Animator.prototype.getCurrentDuration = function () {

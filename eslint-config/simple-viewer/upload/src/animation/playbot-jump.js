@@ -49,10 +49,10 @@ PlaybotJump.attributes.add('_jumpTransition', {
 //   },
 // });
 
-PlaybotJump.prototype.initialize = function () {
-  this._playbotAnimator = this.entity.script.PlaybotAnimator;
-  this._playbotAnimator.listener = this;
-};
+// PlaybotJump.prototype.initialize = function () {
+//   this._playbotAnimator = this.entity.script.PlaybotAnimator;
+//   this._playbotAnimator.listener = this;
+// };
 
 PlaybotJump.prototype.onTimeChanged = function (normalizedTime) {
   const position = this.entity.getPosition();
