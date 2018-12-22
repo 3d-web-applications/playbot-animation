@@ -1,6 +1,7 @@
 import defaultUpdate from '../utils/default-update-function';
 import { Animator, attributes } from './animator';
 import extendScript from '../utils/extend-script';
+import { addAnimator } from '../utils/main-loop';
 
 const PlaybotAnimator = pc.createScript('PlaybotAnimator');
 extendScript(PlaybotAnimator, Animator, attributes);
@@ -11,6 +12,14 @@ PlaybotAnimator.prototype._playbotJumpAnimator = null;
 PlaybotAnimator.prototype.initialize = function () {
   this.super();
   this._playbotJumpAnimator = this.entity.script.PlaybotJump;
+};
+
+PlaybotAnimator.prototype.postInitialize = function () {
+  addAnimator(this.syncedUpdate.bind(this));
+};
+
+PlaybotAnimator.prototype.syncedUpdate = function (dt) {
+  this.time += dt;
 };
 
 // PlaybotAnimator.prototype.update = defaultUpdate;
