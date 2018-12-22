@@ -6,14 +6,19 @@ MainLoop.prototype._userInputs = [];
 MainLoop.prototype._controllers = [];
 MainLoop.prototype._animators = [];
 
-/* MainLoop.prototype.addSubscriber = function (script, array) {
-  if (!script.syncedUpdate || typeof script.syncedUpdate !== 'function') {
-    return -1;
+MainLoop.instance = null;
+
+MainLoop.prototype.initialize = function () {
+  if (MainLoop.instance) {
+    // console.error('MainLoop already exist');
+    this.addUserInput = MainLoop.instance.addUserInput;
+    this.addController = MainLoop.instance.addController;
+    this.addAnimator = MainLoop.instance.addAnimator;
+    this.enabled = false;
   }
 
-  array.push(script.syncedUpdate);
-  return array.length;
-}; */
+  MainLoop.instance = this;
+};
 
 MainLoop.prototype.addUserInput = function (script) {
   return (!script) ? -1 : addToRegistry(script.syncedUpdate, this._userInputs);
