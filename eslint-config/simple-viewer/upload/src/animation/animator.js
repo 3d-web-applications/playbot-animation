@@ -101,6 +101,7 @@ Animator.prototype.startAnimation = function (animationName, reverse, loop) {
   this._animation.play(animationName, _blendTime);
   this.playbackDirection = (reverse) ? Backward : Forward;
   this._animation.loop = loop;
+  this.time = 0;
   // console.log(this._animation.loop); // TODO jumping set to false and directly afterwards back to true
 };
 
