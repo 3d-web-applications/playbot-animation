@@ -207,7 +207,7 @@ CharacterController.prototype._onStateChanged = function () {
     this._playbotAnimator.startRunAnimation(Forward);
   }
   if (this._state === Jump) {
-    this._playbotAnimator.startJumpAnimation(Forward);
+    this._playbotAnimator.startJumpAnimation(Forward, 5);
   }
   if (this._state === Die) {
     this._playbotAnimator.startDieAnimation(Forward);

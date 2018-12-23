@@ -1,4 +1,3 @@
-import defaultUpdate from '../utils/default-update-function';
 import { Animator, attributes } from './animator';
 import extendScript from '../utils/extend-script';
 import { addAnimator } from '../utils/main-loop';
@@ -19,26 +18,30 @@ PlaybotAnimator.prototype.postInitialize = function () {
 };
 
 PlaybotAnimator.prototype.syncedUpdate = function (dt) {
-  this.time += dt;
+  this.time += (dt * this.speed);
 };
 
 // PlaybotAnimator.prototype.update = defaultUpdate;
 
 PlaybotAnimator.prototype.startIdleAnimation = function (reverse) {
   this.startAnimation('Playbot_idle', reverse, true);
+  this.speed = 1;
 };
 
 PlaybotAnimator.prototype.startRunAnimation = function (reverse) {
   this.startAnimation('Playbot_run', reverse, true);
+  this.speed = 1;
 };
 
-PlaybotAnimator.prototype.startJumpAnimation = function (reverse) {
+PlaybotAnimator.prototype.startJumpAnimation = function (reverse, length) {
   this.startAnimation('Playbot_jump', reverse, false);
   // this.update = this.jumpAnimation;
+  this.speed = this.getCurrentDuration() / length;
 };
 
 PlaybotAnimator.prototype.startDieAnimation = function (reverse) {
   this.startAnimation('Playbot_die', reverse, false);
+  this.speed = 1;
 };
 
 // PlaybotAnimator.prototype.jumpAnimation = function (/* dt */) {

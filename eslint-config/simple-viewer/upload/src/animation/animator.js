@@ -27,6 +27,7 @@ Animator.prototype._animation = null;
 // Animator.prototype._playbackDirection = null;
 Animator.prototype._time = 0;
 Animator.prototype._progress = 0;
+Animator.prototype._speed = 1;
 
 Object.defineProperty(Animator.prototype, 'animation', {
   get() {
@@ -89,6 +90,16 @@ Object.defineProperty(Animator.prototype, 'progress', {
 
     this._progress = clampedValue;
     this._onAnimationProgressChanged();
+  },
+});
+
+Object.defineProperty(Animator.prototype, 'speed', {
+  get() {
+    return this._speed;
+  },
+
+  set(value) {
+    this._speed = value;
   },
 });
 
