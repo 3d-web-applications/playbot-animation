@@ -2,7 +2,7 @@ import { addController } from '../utils/main-loop';
 import { PlayerState } from '../player/player-states';
 
 import {
-  Forward, Backward, Idle, Run, Jump, Die, RunAndJump,
+  Forward, /* Backward, */Idle, Run, Jump, Die, RunAndJump,
 } from './animation-states';
 
 const CharacterController = pc.createScript('CharacterController');
@@ -138,15 +138,12 @@ CharacterController.prototype.moveBackward = function (dt) {
 CharacterController.prototype.jump = function (dt) {
   if (this._timeInAir === 0) {
     this.enterJumpState();
-    // this.onTimeChanged(this._playbotAnimator.getAnimationProgress());
     this._timeInAir += dt;
     this.onTimeChanged(this._timeInAir / 5);
     return;
   }
 
   this._timeInAir += dt;
-  // this.onTimeChanged(this._playbotAnimator.getAnimationProgress());
-  // this.onTimeChanged(this._timeInAir / 5);
 
   if (this._timeInAir >= 5) {
     this.exitJumpState();
