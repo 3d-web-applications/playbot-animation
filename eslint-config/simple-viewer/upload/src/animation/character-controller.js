@@ -140,20 +140,24 @@ CharacterController.prototype.jump = function (dt) {
     this.enterJumpState();
     // this.onTimeChanged(this._playbotAnimator.getAnimationProgress());
     this._timeInAir += dt;
+    this.onTimeChanged(this._timeInAir / 5);
     return;
   }
 
   this._timeInAir += dt;
   // this.onTimeChanged(this._playbotAnimator.getAnimationProgress());
+  // this.onTimeChanged(this._timeInAir / 5);
 
   if (this._timeInAir >= 5) {
     this.exitJumpState();
+    this.onTimeChanged(0);
+  } else {
+    this.onTimeChanged(this._timeInAir / 5);
   }
 };
 
 CharacterController.prototype.onTimeChanged = function (normalizedTime) {
   const position = this._playbotEntity.getPosition();
-  console.log('onTimeChanged', normalizedTime, this._jumpTransition.value(normalizedTime));
   this._playbotEntity.setPosition(
     position.x,
     this._jumpTransition.value(normalizedTime),
