@@ -1,4 +1,6 @@
 import { addToRegistry } from './add-to-registry';
+import { registerOnFocusFound } from './on-focus-found';
+import { registerOnFocusLost } from './on-focus-lost';
 
 const MainLoop = pc.createScript('MainLoop');
 
@@ -19,6 +21,9 @@ MainLoop.prototype.initialize = function () {
   }
 
   MainLoop.instance = this;
+
+  registerOnFocusFound(() => { this.enabled = true; });
+  registerOnFocusLost(() => { this.enabled = false; });
 };
 
 MainLoop.prototype.addUserInput = function (fn) {
