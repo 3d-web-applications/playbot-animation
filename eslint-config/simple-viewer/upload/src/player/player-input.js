@@ -2,18 +2,12 @@ import { addUserInput } from '../utils/main-loop';
 
 const PlayerInput = pc.createScript('PlayerInput');
 
-PlayerInput.attributes.add('_characterControllerEntity', {
-  type: 'entity',
-  title: 'Character Controller',
-  description: 'Entity with a character controller script',
-});
-
 PlayerInput.prototype._controller = null;
 
 PlayerInput.prototype.initialize = function () {
   this._keyboard = new pc.Keyboard(window);
-  // this._controller = this._characterControllerEntity.script.CharacterController;
   this._player = this.entity.script.PlayerController;
+  this._propulsion = this.entity.script.PlayerPropulsion;
 };
 
 PlayerInput.prototype.postInitialize = function () {
@@ -21,7 +15,7 @@ PlayerInput.prototype.postInitialize = function () {
 };
 
 // PlayerInput.prototype.update = function (dt)
-PlayerInput.prototype.syncedUpdate = function (dt) {
+PlayerInput.prototype.syncedUpdate = function (/* dt */) {
   // Important note: this.app.keyboard.on(pc.EVENT_KEYDOWN, ..., this) would work, but its not smooth enough
   const { _keyboard, _controller, _player } = this;
   const forward = _keyboard.isPressed(pc.KEY_UP);
@@ -30,32 +24,37 @@ PlayerInput.prototype.syncedUpdate = function (dt) {
   const right = _keyboard.isPressed(pc.KEY_RIGHT);
   const jump = _keyboard.isPressed(pc.KEY_SPACE);
 
-  if (left && !right) {
-    // _controller.moveLeft(dt);
-    _player.tryToRunLeft();
-    return;
-  }
-  if (!left && right) {
-    // controller.moveRight(dt);
-    _player.tryToRunRight();
-    return;
-  }
+  /* _player.tryToJump(jump);
+  _player.tryToRunLeft(left && !right);
+  _player.tryToRunRight(!left && right);
+  _player.tryToRunForward(forward && !backward);
+  _player.tryToRunBackward(!forward && backward); */
+  // this.forwards += (forward && !backward) ? 0.1 : -0.05;
+  // this.backwards += (!forward && backward) ? 0.1 : -0.05;
+  // this.left += (left && !right) ? 0.1 : -0.05;
+  // this.right += (!left && right) ? 0.1 : -0.05;
+  // this.upwards += (jump) ? 0.1 : -0.1;
+
+  // if (forward) this._propulsion.forward();
+  // if (jump) this._propulsion.upward();
+  // if (left) this._propulsion.sideward();
   if (forward && !backward) {
-    // _controller.moveForward(dt);
-    _player.tryToRunForward();
-    return;
-  }
-  if (!forward && backward) {
-    // _controller.moveBackward(dt);
-    _player.tryToRunBackward();
-    return;
-  }
-  if (jump) {
-    // _controller.enterJumpState();
-    _player.tryToJump();
-    return;
+    this._propulsion.intensityZ = 1;
+  } else if (!forward && backward) {
+    this._propulsion.intensityZ = -1;
+  } else {
+    this._propulsion.intensityZ = 0;
   }
 
-  //_controller.doNothing();
-  _player.tryToIdle();
+  this._propulsion.intensityY = (jump) ? 1 : 0;
+
+  if (left && !right) {
+    this._propulsion.intensityX = 1;
+  } else if (!left && right) {
+    this._propulsion.intensityX = -1;
+  } else {
+    this._propulsion.intensityX = 0;
+  }
+
+  // _player.tryToIdle();
 };
