@@ -22,7 +22,6 @@ PlayerPropulsion.prototype.intensityZ = 0;
 
 PlayerPropulsion.prototype.initialize = function () {
   this._rigidbody = this._physicalEntity.rigidbody;
-  this.last = 0;
 };
 
 PlayerPropulsion.prototype.postInitialize = function () {
