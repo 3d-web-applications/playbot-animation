@@ -1,66 +1,49 @@
-import { PlayerState } from './player-states';
-// import { Transitions } from './player-transitions';
+import { createPlayerState } from './create-player-state';
+import { registerFunction } from '../utils/main-loop';
+import { InterpretState } from '../utils/main-loop-stages';
 
 const PlayerController = pc.createScript('PlayerController');
 
-PlayerController.prototype._state = PlayerState.Idle;
+PlayerController.prototype.initialize = function () {
+  const state = createPlayerState();
 
-Object.defineProperty(PlayerController.prototype, 'state', {
-  get() {
-    return this._state;
-  },
-});
+  const input = this.entity.script.PlayerInput;
+  input.register(state.setForward.bind(state), 'KEY_UP');
+  input.register(state.setBackward.bind(state), 'KEY_DOWN');
+  input.register(state.setLeft.bind(state), 'KEY_LEFT');
+  input.register(state.setRight.bind(state), 'KEY_RIGHT');
+  input.register(state.setJump.bind(state), 'KEY_SPACE');
 
-/* PlayerController.prototype._isTransitionAllowed = (
-  activeState, targetState,
-) => {
-  const keys = Object.keys(targetState);
-  for (let index = 0; index < keys.length; index += 1) {
-    const name = keys[index];
-    if (activeState[name] === targetState[name]) {
-      console.log(name, activeState[name], targetState[name]);
-      return false;
-    }
+  this.playerState = state;
+};
+
+PlayerController.prototype.postInitialize = function () {
+  registerFunction(this.syncedUpdate.bind(this), InterpretState);
+};
+
+PlayerController.prototype.syncedUpdate = function () {
+  const {
+    forward, backward, left, right, jump,
+  } = this.playerState;
+
+  // console.log(forward, backward, left, right, jump);
+
+  const propulsion = this.entity.script.PlayerPropulsion;
+  if (forward && !backward) {
+    propulsion.intensityZ = 1;
+  } else if (!forward && backward) {
+    propulsion.intensityZ = -1;
+  } else {
+    propulsion.intensityZ = 0;
   }
-  return true;
-}; */
 
-PlayerController.prototype.tryToRunForward = function () {
-  if (this.state & PlayerState.Forward) return;
-  this._state = (this._state & PlayerState.OnGround) | PlayerState.Forward;
-  this._onStateChanged();
-};
+  propulsion.intensityY = (jump) ? 1 : 0;
 
-PlayerController.prototype.tryToRunBackward = function () {
-  if (this.state & PlayerState.Backward) return;
-  this._state = (this._state & PlayerState.OnGround) | PlayerState.Backward;
-  this._onStateChanged();
-};
-
-PlayerController.prototype.tryToRunLeft = function () {
-  if (this.state & PlayerState.Left) return;
-  this._state = (this._state & PlayerState.OnGround) | PlayerState.Left;
-  this._onStateChanged();
-};
-
-PlayerController.prototype.tryToRunRight = function () {
-  if (this.state & PlayerState.Right) return;
-  this._state = (this._state & PlayerState.OnGround) | PlayerState.Right;
-  this._onStateChanged();
-};
-
-PlayerController.prototype.tryToJump = function () {
-  if (this.state & PlayerState.OnGround) return;
-  this._state |= PlayerState.OnGround;
-  this._onStateChanged();
-};
-
-PlayerController.prototype.tryToIdle = function () {
-  if (this.state === PlayerState.Idle) return;
-  this._state = PlayerState.Idle;
-  this._onStateChanged();
-};
-
-PlayerController.prototype._onStateChanged = function () {
-  console.log(this.state);
+  if (left && !right) {
+    propulsion.intensityX = 1;
+  } else if (!left && right) {
+    propulsion.intensityX = -1;
+  } else {
+    propulsion.intensityX = 0;
+  }
 };
