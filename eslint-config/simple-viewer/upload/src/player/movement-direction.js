@@ -1,8 +1,7 @@
 import { registerFunction } from '../utils/main-loop';
-import { InterpretState } from '../utils/main-loop-stages';
+import { EvaluateChange } from '../utils/main-loop-stages';
 
 const MovementDirection = pc.createScript('MovementDirection');
-
 
 MovementDirection.attributes.add('_physicalEntity', {
   type: 'entity',
@@ -44,15 +43,8 @@ MovementDirection.prototype.initialize = function () {
 };
 
 MovementDirection.prototype.postInitialize = function () {
-  // addStateMemory(this.saveTranslation.bind(this));
-  registerFunction(this.processMovementDirection.bind(this), InterpretState);
+  registerFunction(this.processMovementDirection.bind(this), EvaluateChange);
 };
-
-/* MovementDirection.prototype.saveTranslation = function () {
-  this._previousX = this._position.x;
-  this._previousY = this._position.y;
-  this._previousZ = this._position.z;
-}; */
 
 MovementDirection.prototype.processMovementDirection = function () {
   this._position = this._physicalEntity.getPosition();
