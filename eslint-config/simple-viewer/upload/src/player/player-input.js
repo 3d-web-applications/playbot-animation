@@ -1,8 +1,18 @@
-import { addUserInput } from '../utils/main-loop';
+import { registerFunction } from '../utils/main-loop';
+import { VisitInput } from '../utils/main-loop-stages';
+import { addToRegistry } from '../utils/add-to-registry';
 
 const PlayerInput = pc.createScript('PlayerInput');
 
-PlayerInput.prototype._controller = null;
+PlayerInput.prototype._listeners = {};
+
+PlayerInput.prototype.register = function (fn, keycodeName) {
+  if (!this._listeners[keycodeName]) {
+    this._listeners[keycodeName] = [];
+  }
+
+  addToRegistry(fn, this._listeners[keycodeName]);
+};
 
 PlayerInput.prototype.initialize = function () {
   this._keyboard = new pc.Keyboard(window);
@@ -11,34 +21,20 @@ PlayerInput.prototype.initialize = function () {
 };
 
 PlayerInput.prototype.postInitialize = function () {
-  addUserInput(this.syncedUpdate.bind(this));
+  registerFunction(this.syncedUpdate.bind(this), VisitInput);
 };
+
+// Important note: instead of calling isPressed(...), one could also use this.app.keyboard.on(pc.EVENT_KEYDOWN, ..., this), but this is not smooth enough
 
 // PlayerInput.prototype.update = function (dt)
 PlayerInput.prototype.syncedUpdate = function (/* dt */) {
-  // Important note: this.app.keyboard.on(pc.EVENT_KEYDOWN, ..., this) would work, but its not smooth enough
-  const { _keyboard } = this;
-  const forward = _keyboard.isPressed(pc.KEY_UP);
-  const backward = _keyboard.isPressed(pc.KEY_DOWN);
-  const left = _keyboard.isPressed(pc.KEY_LEFT);
-  const right = _keyboard.isPressed(pc.KEY_RIGHT);
-  const jump = _keyboard.isPressed(pc.KEY_SPACE);
-
-  if (forward && !backward) {
-    this._propulsion.intensityZ = 1;
-  } else if (!forward && backward) {
-    this._propulsion.intensityZ = -1;
-  } else {
-    this._propulsion.intensityZ = 0;
-  }
-
-  this._propulsion.intensityY = (jump) ? 1 : 0;
-
-  if (left && !right) {
-    this._propulsion.intensityX = 1;
-  } else if (!left && right) {
-    this._propulsion.intensityX = -1;
-  } else {
-    this._propulsion.intensityX = 0;
-  }
+  const { _keyboard, _listeners } = this;
+  const keys = Object.keys(_listeners);
+  keys.forEach((keycodeName) => {
+    const keyPressed = _keyboard.isPressed(pc[keycodeName]);
+    const group = _listeners[keycodeName];
+    for (let index = 0; index < group.length; index += 1) {
+      group[index](keyPressed);
+    }
+  });
 };
