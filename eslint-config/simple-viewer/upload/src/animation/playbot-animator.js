@@ -1,6 +1,7 @@
 import { Animator, attributes } from './animator';
 import extendScript from '../utils/extend-script';
-import { addAnimator } from '../utils/main-loop';
+import { registerFunction } from '../utils/main-loop';
+import { RefreshScreen } from '../utils/main-loop-stages';
 
 const PlaybotAnimator = pc.createScript('PlaybotAnimator');
 extendScript(PlaybotAnimator, Animator, attributes);
@@ -14,7 +15,7 @@ PlaybotAnimator.prototype.initialize = function () {
 };
 
 PlaybotAnimator.prototype.postInitialize = function () {
-  addAnimator(this.syncedUpdate.bind(this));
+  registerFunction(this.syncedUpdate.bind(this), RefreshScreen);
 };
 
 PlaybotAnimator.prototype.syncedUpdate = function (dt) {

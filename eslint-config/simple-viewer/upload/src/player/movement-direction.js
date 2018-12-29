@@ -1,4 +1,5 @@
-import { /* addStateMemory, */ addStateProcessor } from '../utils/main-loop';
+import { registerFunction } from '../utils/main-loop';
+import { InterpretState } from '../utils/main-loop-stages';
 
 const MovementDirection = pc.createScript('MovementDirection');
 
@@ -44,7 +45,7 @@ MovementDirection.prototype.initialize = function () {
 
 MovementDirection.prototype.postInitialize = function () {
   // addStateMemory(this.saveTranslation.bind(this));
-  addStateProcessor(this.processMovementDirection.bind(this));
+  registerFunction(this.processMovementDirection.bind(this), InterpretState);
 };
 
 /* MovementDirection.prototype.saveTranslation = function () {
