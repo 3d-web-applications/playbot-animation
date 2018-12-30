@@ -35,6 +35,8 @@ MovementDirection.prototype._previousX = 0;
 MovementDirection.prototype._previousY = 0;
 MovementDirection.prototype._previousZ = 0;
 
+MovementDirection.prototype._listener = [];
+
 MovementDirection.prototype.initialize = function () {
   const position = this._physicalEntity.getPosition();
   this._previousX = position.x;
@@ -48,11 +50,17 @@ MovementDirection.prototype.postInitialize = function () {
 
 MovementDirection.prototype.processMovementDirection = function () {
   this._position = this._physicalEntity.getPosition();
+
   this._dx = this._position.x - this._previousX;
   this._dy = this._position.y - this._previousY;
   this._dz = this._position.z - this._previousZ;
-  console.log(this.dx, this.dy, this.dz);
+  this.onChange();
+  // console.log(this.dx, this.dy, this.dz);
   this._previousX = this._position.x;
   this._previousY = this._position.y;
   this._previousZ = this._position.z;
+};
+
+MovementDirection.prototype.onChange = function () {
+  this._listener.forEach(fn => fn());
 };
