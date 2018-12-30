@@ -12,6 +12,7 @@ PlaybotAnimator.prototype._playbotJumpAnimator = null;
 PlaybotAnimator.prototype.initialize = function () {
   this.super();
   this._playbotJumpAnimator = this.entity.script.PlaybotJump;
+  this.startIdleAnimation();
 };
 
 PlaybotAnimator.prototype.postInitialize = function () {
