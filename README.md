@@ -90,3 +90,10 @@ PlaybotAnimator.prototype.initialize = function () {
 
 <b>Step 4:</b> Have fun :-)
 
+## Main Loop
+I am currently working on a main loop with 5 stages.
+- Visit input
+- Interpret state
+- Perform action
+- Evaluate change
+- Refresh screeen
