@@ -16,6 +16,21 @@ PlayerController.attributes.add('_animatedEntity', {
   description: 'Entity with a model component and an animation component.',
 });
 
+Object.defineProperty(PlayerController.prototype, 'animationState', {
+  get() {
+    return this._animationState;
+  },
+
+  set(value) {
+    if (value === this._animationState) {
+      return;
+    }
+
+    this._animationState = value;
+    this._onAnimationStateChanged();
+  },
+});
+
 PlayerController.prototype.initialize = function () {
   const { entity, _dynamicEntity } = this;
   const {
@@ -44,27 +59,37 @@ PlayerController.prototype.initialize = function () {
 PlayerController.prototype.precision = 0.001;
 
 PlayerController.prototype._selectActiveAnimation = function () {
-  const { PlaybotMotionTracking, PlaybotAnimator } = this.entity.script;
+  const { PlaybotMotionTracking } = this.entity.script;
 
-  // console.log(PlaybotMotionTracking.dx, PlaybotMotionTracking.dy, PlaybotMotionTracking.dz);
   if (Math.abs(PlaybotMotionTracking.dy) > this.precision) {
-    console.log(0);
-    if (this._animationState === 0) return;
-    this._animationState = 0;
-    PlaybotAnimator.startJumpAnimation();
+    this.animationState = 0;
     return;
   }
-  if (Math.abs(PlaybotMotionTracking.dx) < this.precision && Math.abs(PlaybotMotionTracking.dz) < this.precision) {
-    console.log(2);
-    if (this._animationState === 2) return;
-    this._animationState = 2;
-    PlaybotAnimator.startIdleAnimation();
+
+  if (Math.abs(PlaybotMotionTracking.dx) < this.precision
+    && Math.abs(PlaybotMotionTracking.dz) < this.precision) {
+    this.animationState = 2;
     return;
   }
-  console.log(1);
-  if (this._animationState === 1) return;
-  this._animationState = 1;
-  PlaybotAnimator.startRunAnimation();
+
+  this.animationState = 1;
+};
+
+PlayerController.prototype._onAnimationStateChanged = function () {
+  const { PlaybotAnimator } = this.entity.script;
+  switch (this.animationState) {
+    case 2:
+      PlaybotAnimator.startIdleAnimation();
+      break;
+    case 1:
+      PlaybotAnimator.startRunAnimation();
+      break;
+    case 0:
+      PlaybotAnimator.startJumpAnimation();
+      break;
+    default:
+      break;
+  }
 };
 
 PlayerController.prototype.postInitialize = function () {
