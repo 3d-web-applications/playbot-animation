@@ -17,10 +17,15 @@ PlayerController.attributes.add('_animatedEntity', {
 });
 
 PlayerController.prototype.initialize = function () {
+  const { entity, _dynamicEntity } = this;
   const {
     PlayerInput, PlaybotLocomotion, PlaybotMotionTracking, PlaybotAnimator,
-  } = this.entity.script;
+  } = entity.script;
+
+  this._animationState = -1;
+
   const state = createPlayerState();
+  this._playerState = state;
 
   PlayerInput.register(state.setForward.bind(state), 'KEY_UP');
   PlayerInput.register(state.setBackward.bind(state), 'KEY_DOWN');
@@ -28,16 +33,10 @@ PlayerController.prototype.initialize = function () {
   PlayerInput.register(state.setRight.bind(state), 'KEY_RIGHT');
   PlayerInput.register(state.setJump.bind(state), 'KEY_SPACE');
 
-  this._playerState = state;
-
-  const { _dynamicEntity } = this;
-
   PlaybotLocomotion.setup(_dynamicEntity.rigidbody);
 
   PlaybotMotionTracking.setup(_dynamicEntity);
   PlaybotMotionTracking._listener.push(this._selectActiveAnimation.bind(this));
-
-  this._animationState = -1;
 
   PlaybotAnimator.animation = this._animatedEntity.animation;
 };
@@ -47,7 +46,7 @@ PlayerController.prototype.precision = 0.001;
 PlayerController.prototype._selectActiveAnimation = function () {
   const { PlaybotMotionTracking, PlaybotAnimator } = this.entity.script;
 
-  console.log(PlaybotMotionTracking.dx, PlaybotMotionTracking.dy, PlaybotMotionTracking.dz);
+  // console.log(PlaybotMotionTracking.dx, PlaybotMotionTracking.dy, PlaybotMotionTracking.dz);
   if (Math.abs(PlaybotMotionTracking.dy) > this.precision) {
     console.log(0);
     if (this._animationState === 0) return;
@@ -73,10 +72,11 @@ PlayerController.prototype.postInitialize = function () {
 };
 
 PlayerController.prototype.syncedUpdate = function () {
+  const { entity, _playerState } = this;
   const {
     forward, backward, left, right, jump,
-  } = this._playerState;
-  const { PlaybotLocomotion } = this.entity.script;
+  } = _playerState;
+  const { PlaybotLocomotion } = entity.script;
 
   if (forward && !backward) {
     PlaybotLocomotion.intensityZ = 1;
