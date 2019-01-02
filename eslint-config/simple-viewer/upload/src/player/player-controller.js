@@ -25,7 +25,6 @@ Object.defineProperty(PlayerController.prototype, 'animationState', {
     if (value === this._animationState) {
       return;
     }
-
     this._animationState = value;
     this._onAnimationStateChanged();
   },
@@ -69,23 +68,16 @@ PlayerController.prototype.syncedUpdate = function () {
   } = _playerState;
   const { PlaybotLocomotion } = entity.script;
 
-  if (forward && !backward) {
-    PlaybotLocomotion.intensityZ = 1;
-  } else if (!forward && backward) {
-    PlaybotLocomotion.intensityZ = -1;
-  } else {
-    PlaybotLocomotion.intensityZ = 0;
-  }
-
+  PlaybotLocomotion.intensityZ = this._computeIntensity(forward, backward);
   PlaybotLocomotion.intensityY = (jump) ? 1 : 0;
+  PlaybotLocomotion.intensityX = this._computeIntensity(left, right);
+};
 
-  if (left && !right) {
-    PlaybotLocomotion.intensityX = 1;
-  } else if (!left && right) {
-    PlaybotLocomotion.intensityX = -1;
-  } else {
-    PlaybotLocomotion.intensityX = 0;
+PlayerController.prototype._computeIntensity = function (flagA, flagB) {
+  if (flagA === flagB) {
+    return 0;
   }
+  return (flagA) ? 1 : -1;
 };
 
 PlayerController.prototype._selectActiveAnimation = function () {
