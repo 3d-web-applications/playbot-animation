@@ -31,6 +31,8 @@ Object.defineProperty(PlayerController.prototype, 'animationState', {
   },
 });
 
+PlayerController.prototype._precision = 0.001;
+
 PlayerController.prototype.initialize = function () {
   const { entity, _dynamicEntity } = this;
   const {
@@ -56,18 +58,17 @@ PlayerController.prototype.initialize = function () {
   PlaybotAnimator.animation = this._animatedEntity.animation;
 };
 
-PlayerController.prototype.precision = 0.001;
-
 PlayerController.prototype._selectActiveAnimation = function () {
-  const { PlaybotMotionTracking } = this.entity.script;
+  const { entity, _precision } = this;
+  const { PlaybotMotionTracking } = entity.script;
 
-  if (Math.abs(PlaybotMotionTracking.dy) > this.precision) {
+  if (Math.abs(PlaybotMotionTracking.dy) > _precision) {
     this.animationState = 0;
     return;
   }
 
-  if (Math.abs(PlaybotMotionTracking.dx) < this.precision
-    && Math.abs(PlaybotMotionTracking.dz) < this.precision) {
+  if (Math.abs(PlaybotMotionTracking.dx) < _precision
+    && Math.abs(PlaybotMotionTracking.dz) < _precision) {
     this.animationState = 2;
     return;
   }
