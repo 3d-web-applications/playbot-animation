@@ -11,4 +11,4 @@ import './player/player-controller';
 import './player/player-input';
 // import './player/player-direction';
 import './player/player-propulsion';
-import './player/movement-direction';
+import './player/playbot-motion-tracking';
