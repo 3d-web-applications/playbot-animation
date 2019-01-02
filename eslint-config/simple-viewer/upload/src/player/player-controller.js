@@ -4,10 +4,16 @@ import { InspectStates } from '../utils/main-loop-stages';
 
 const PlayerController = pc.createScript('PlayerController');
 
+PlayerController.attributes.add('_dynamicEntity', {
+  type: 'entity',
+  title: 'Dynamic Entity',
+  description: 'Entity with a collision component and a rigid body component. The latter type must be set to dynamic!',
+});
+
 PlayerController.attributes.add('_animatedEntity', {
   type: 'entity',
   title: 'Animated Entity',
-  description: 'Entity with animation component',
+  description: 'Entity with a model component and an animation component.',
 });
 
 PlayerController.prototype.initialize = function () {
