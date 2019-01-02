@@ -3,12 +3,6 @@ import { EvaluateChanges } from '../utils/main-loop-stages';
 
 const PlaybotMotionTracking = pc.createScript('PlaybotMotionTracking');
 
-PlaybotMotionTracking.attributes.add('_physicalEntity', {
-  type: 'entity',
-  title: 'Character Root Entity',
-  description: 'Character entity with a rigidbody component',
-});
-
 PlaybotMotionTracking.prototype._dx = 0;
 PlaybotMotionTracking.prototype._dy = 0;
 PlaybotMotionTracking.prototype._dz = 0;
@@ -37,8 +31,9 @@ PlaybotMotionTracking.prototype._previousZ = 0;
 
 PlaybotMotionTracking.prototype._listener = [];
 
-PlaybotMotionTracking.prototype.initialize = function () {
-  const position = this._physicalEntity.getPosition();
+PlaybotMotionTracking.prototype.setup = function (entity) {
+  this._targetEntity = entity;
+  const position = entity.getPosition();
   this._previousX = position.x;
   this._previousY = position.y;
   this._previousZ = position.z;
@@ -49,7 +44,7 @@ PlaybotMotionTracking.prototype.postInitialize = function () {
 };
 
 PlaybotMotionTracking.prototype.processMovementDirection = function () {
-  this._position = this._physicalEntity.getPosition();
+  this._position = this._targetEntity.getPosition();
 
   this._dx = this._position.x - this._previousX;
   this._dy = this._position.y - this._previousY;

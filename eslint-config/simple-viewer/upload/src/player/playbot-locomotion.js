@@ -3,12 +3,6 @@ import { PerformActions } from '../utils/main-loop-stages';
 
 const PlaybotLocomotion = pc.createScript('PlaybotLocomotion');
 
-PlaybotLocomotion.attributes.add('_physicalEntity', {
-  type: 'entity',
-  title: 'Character Root Entity',
-  description: 'Character entity with a rigidbody component',
-});
-
 PlaybotLocomotion.attributes.add('_maxForces', {
   type: 'vec3',
   title: 'Forces',
@@ -21,8 +15,8 @@ PlaybotLocomotion.prototype.intensityX = 0;
 PlaybotLocomotion.prototype.intensityY = 0;
 PlaybotLocomotion.prototype.intensityZ = 0;
 
-PlaybotLocomotion.prototype.initialize = function () {
-  this._rigidbody = this._physicalEntity.rigidbody;
+PlaybotLocomotion.prototype.setup = function (rigidbody) {
+  this._rigidbody = rigidbody;
 };
 
 PlaybotLocomotion.prototype.postInitialize = function () {

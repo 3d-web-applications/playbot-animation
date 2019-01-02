@@ -26,7 +26,13 @@ PlayerController.prototype.initialize = function () {
   input.register(state.setRight.bind(state), 'KEY_RIGHT');
   input.register(state.setJump.bind(state), 'KEY_SPACE');
 
+  const { _dynamicEntity } = this;
+
+  this.motor = this.entity.script.PlaybotLocomotion;
+  this.motor.setup(_dynamicEntity.rigidbody);
+
   this.evaluator = this.entity.script.PlaybotMotionTracking;
+  this.evaluator.setup(_dynamicEntity);
   this.evaluator._listener.push(this._selectActiveAnimation.bind(this));
 
   this.animationState = -1;
