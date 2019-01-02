@@ -20,7 +20,7 @@ PlayerController.prototype.initialize = function () {
   input.register(state.setRight.bind(state), 'KEY_RIGHT');
   input.register(state.setJump.bind(state), 'KEY_SPACE');
 
-  this.evaluator = this.entity.script.MovementDirection;
+  this.evaluator = this.entity.script.PlaybotMotionTracking;
   this.evaluator._listener.push(this._selectActiveAnimation.bind(this));
 
   this.animationState = -1;

@@ -1,54 +1,54 @@
 import { registerFunction } from '../utils/main-loop';
 import { EvaluateChanges } from '../utils/main-loop-stages';
 
-const MovementDirection = pc.createScript('MovementDirection');
+const PlaybotMotionTracking = pc.createScript('PlaybotMotionTracking');
 
-MovementDirection.attributes.add('_physicalEntity', {
+PlaybotMotionTracking.attributes.add('_physicalEntity', {
   type: 'entity',
   title: 'Character Root Entity',
   description: 'Character entity with a rigidbody component',
 });
 
-MovementDirection.prototype._dx = 0;
-MovementDirection.prototype._dy = 0;
-MovementDirection.prototype._dz = 0;
+PlaybotMotionTracking.prototype._dx = 0;
+PlaybotMotionTracking.prototype._dy = 0;
+PlaybotMotionTracking.prototype._dz = 0;
 
-Object.defineProperty(MovementDirection.prototype, 'dx', {
+Object.defineProperty(PlaybotMotionTracking.prototype, 'dx', {
   get() {
     return this._dx;
   },
 });
 
-Object.defineProperty(MovementDirection.prototype, 'dy', {
+Object.defineProperty(PlaybotMotionTracking.prototype, 'dy', {
   get() {
     return this._dy;
   },
 });
 
-Object.defineProperty(MovementDirection.prototype, 'dz', {
+Object.defineProperty(PlaybotMotionTracking.prototype, 'dz', {
   get() {
     return this._dz;
   },
 });
 
-MovementDirection.prototype._previousX = 0;
-MovementDirection.prototype._previousY = 0;
-MovementDirection.prototype._previousZ = 0;
+PlaybotMotionTracking.prototype._previousX = 0;
+PlaybotMotionTracking.prototype._previousY = 0;
+PlaybotMotionTracking.prototype._previousZ = 0;
 
-MovementDirection.prototype._listener = [];
+PlaybotMotionTracking.prototype._listener = [];
 
-MovementDirection.prototype.initialize = function () {
+PlaybotMotionTracking.prototype.initialize = function () {
   const position = this._physicalEntity.getPosition();
   this._previousX = position.x;
   this._previousY = position.y;
   this._previousZ = position.z;
 };
 
-MovementDirection.prototype.postInitialize = function () {
+PlaybotMotionTracking.prototype.postInitialize = function () {
   registerFunction(this.processMovementDirection.bind(this), EvaluateChanges);
 };
 
-MovementDirection.prototype.processMovementDirection = function () {
+PlaybotMotionTracking.prototype.processMovementDirection = function () {
   this._position = this._physicalEntity.getPosition();
 
   this._dx = this._position.x - this._previousX;
@@ -61,6 +61,6 @@ MovementDirection.prototype.processMovementDirection = function () {
   this._previousZ = this._position.z;
 };
 
-MovementDirection.prototype.onChange = function () {
+PlaybotMotionTracking.prototype.onChange = function () {
   this._listener.forEach(fn => fn());
 };
