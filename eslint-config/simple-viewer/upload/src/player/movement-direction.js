@@ -1,5 +1,5 @@
 import { registerFunction } from '../utils/main-loop';
-import { EvaluateChange } from '../utils/main-loop-stages';
+import { EvaluateChanges } from '../utils/main-loop-stages';
 
 const MovementDirection = pc.createScript('MovementDirection');
 
@@ -45,7 +45,7 @@ MovementDirection.prototype.initialize = function () {
 };
 
 MovementDirection.prototype.postInitialize = function () {
-  registerFunction(this.processMovementDirection.bind(this), EvaluateChange);
+  registerFunction(this.processMovementDirection.bind(this), EvaluateChanges);
 };
 
 MovementDirection.prototype.processMovementDirection = function () {

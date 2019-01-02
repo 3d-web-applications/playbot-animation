@@ -1,5 +1,5 @@
 import { registerFunction } from '../utils/main-loop';
-import { PerformAction } from '../utils/main-loop-stages';
+import { PerformActions } from '../utils/main-loop-stages';
 import { PlayerState } from '../player/player-states';
 
 import {
@@ -90,7 +90,7 @@ CharacterController.prototype.initialize = function () {
 };
 
 CharacterController.prototype.postInitialize = function () {
-  registerFunction(this.syncedUpdate.bind(this), PerformAction);
+  registerFunction(this.syncedUpdate.bind(this), PerformActions);
 };
 
 CharacterController.prototype.syncedUpdate = function (dt) {

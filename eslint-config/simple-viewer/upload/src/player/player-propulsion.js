@@ -1,5 +1,5 @@
 import { registerFunction } from '../utils/main-loop';
-import { PerformAction } from '../utils/main-loop-stages';
+import { PerformActions } from '../utils/main-loop-stages';
 
 const PlayerPropulsion = pc.createScript('PlayerPropulsion');
 
@@ -26,7 +26,7 @@ PlayerPropulsion.prototype.initialize = function () {
 };
 
 PlayerPropulsion.prototype.postInitialize = function () {
-  registerFunction(this.syncedUpdate.bind(this), PerformAction);
+  registerFunction(this.syncedUpdate.bind(this), PerformActions);
 };
 
 PlayerPropulsion.prototype.syncedUpdate = function () {

@@ -1,5 +1,5 @@
 import { registerFunction } from '../utils/main-loop';
-import { VisitInput } from '../utils/main-loop-stages';
+import { ValidateInput } from '../utils/main-loop-stages';
 import { addToRegistry } from '../utils/add-to-registry';
 
 const PlayerInput = pc.createScript('PlayerInput');
@@ -21,7 +21,7 @@ PlayerInput.prototype.initialize = function () {
 };
 
 PlayerInput.prototype.postInitialize = function () {
-  registerFunction(this.syncedUpdate.bind(this), VisitInput);
+  registerFunction(this.syncedUpdate.bind(this), ValidateInput);
 };
 
 // Important note: instead of calling isPressed(...), one could also use this.app.keyboard.on(pc.EVENT_KEYDOWN, ..., this), but this is not smooth enough

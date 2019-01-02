@@ -9,6 +9,7 @@ Animator.attributes.add = collectAttributes(
   attributes,
 );
 
+// TODO obsolete because speed is set by others in the future and is also set to 0 on initialization
 Animator.attributes.add('_animationSpeed', {
   type: 'number',
   title: 'Start Animation Speed',

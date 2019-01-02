@@ -1,6 +1,6 @@
 import { createPlayerState } from './create-player-state';
 import { registerFunction } from '../utils/main-loop';
-import { InterpretState } from '../utils/main-loop-stages';
+import { InspectStates } from '../utils/main-loop-stages';
 
 const PlayerController = pc.createScript('PlayerController');
 
@@ -57,7 +57,7 @@ PlayerController.prototype._selectActiveAnimation = function () {
 };
 
 PlayerController.prototype.postInitialize = function () {
-  registerFunction(this.syncedUpdate.bind(this), InterpretState);
+  registerFunction(this.syncedUpdate.bind(this), InspectStates);
 };
 
 PlayerController.prototype.syncedUpdate = function () {
