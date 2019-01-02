@@ -58,6 +58,36 @@ PlayerController.prototype.initialize = function () {
   PlaybotAnimator.animation = this._animatedEntity.animation;
 };
 
+PlayerController.prototype.postInitialize = function () {
+  registerFunction(this.syncedUpdate.bind(this), InspectStates);
+};
+
+PlayerController.prototype.syncedUpdate = function () {
+  const { entity, _playerState } = this;
+  const {
+    forward, backward, left, right, jump,
+  } = _playerState;
+  const { PlaybotLocomotion } = entity.script;
+
+  if (forward && !backward) {
+    PlaybotLocomotion.intensityZ = 1;
+  } else if (!forward && backward) {
+    PlaybotLocomotion.intensityZ = -1;
+  } else {
+    PlaybotLocomotion.intensityZ = 0;
+  }
+
+  PlaybotLocomotion.intensityY = (jump) ? 1 : 0;
+
+  if (left && !right) {
+    PlaybotLocomotion.intensityX = 1;
+  } else if (!left && right) {
+    PlaybotLocomotion.intensityX = -1;
+  } else {
+    PlaybotLocomotion.intensityX = 0;
+  }
+};
+
 PlayerController.prototype._selectActiveAnimation = function () {
   const { entity, _precision } = this;
   const { PlaybotMotionTracking } = entity.script;
@@ -90,35 +120,5 @@ PlayerController.prototype._onAnimationStateChanged = function () {
       break;
     default:
       break;
-  }
-};
-
-PlayerController.prototype.postInitialize = function () {
-  registerFunction(this.syncedUpdate.bind(this), InspectStates);
-};
-
-PlayerController.prototype.syncedUpdate = function () {
-  const { entity, _playerState } = this;
-  const {
-    forward, backward, left, right, jump,
-  } = _playerState;
-  const { PlaybotLocomotion } = entity.script;
-
-  if (forward && !backward) {
-    PlaybotLocomotion.intensityZ = 1;
-  } else if (!forward && backward) {
-    PlaybotLocomotion.intensityZ = -1;
-  } else {
-    PlaybotLocomotion.intensityZ = 0;
-  }
-
-  PlaybotLocomotion.intensityY = (jump) ? 1 : 0;
-
-  if (left && !right) {
-    PlaybotLocomotion.intensityX = 1;
-  } else if (!left && right) {
-    PlaybotLocomotion.intensityX = -1;
-  } else {
-    PlaybotLocomotion.intensityX = 0;
   }
 };
