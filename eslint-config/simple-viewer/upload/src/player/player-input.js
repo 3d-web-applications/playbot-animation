@@ -17,7 +17,6 @@ PlayerInput.prototype.register = function (fn, keycodeName) {
 PlayerInput.prototype.initialize = function () {
   this._keyboard = new pc.Keyboard(window);
   this._player = this.entity.script.PlayerController;
-  this._propulsion = this.entity.script.PlayerPropulsion;
 };
 
 PlayerInput.prototype.postInitialize = function () {
