@@ -67,22 +67,22 @@ PlayerController.prototype.syncedUpdate = function () {
 
   // console.log(forward, backward, left, right, jump);
 
-  const propulsion = this.entity.script.PlayerPropulsion;
+  const motor = this.entity.script.PlaybotLocomotion;
   if (forward && !backward) {
-    propulsion.intensityZ = 1;
+    motor.intensityZ = 1;
   } else if (!forward && backward) {
-    propulsion.intensityZ = -1;
+    motor.intensityZ = -1;
   } else {
-    propulsion.intensityZ = 0;
+    motor.intensityZ = 0;
   }
 
-  propulsion.intensityY = (jump) ? 1 : 0;
+  motor.intensityY = (jump) ? 1 : 0;
 
   if (left && !right) {
-    propulsion.intensityX = 1;
+    motor.intensityX = 1;
   } else if (!left && right) {
-    propulsion.intensityX = -1;
+    motor.intensityX = -1;
   } else {
-    propulsion.intensityX = 0;
+    motor.intensityX = 0;
   }
 };
