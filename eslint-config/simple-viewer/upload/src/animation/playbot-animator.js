@@ -6,7 +6,6 @@ import { RefreshView } from '../utils/main-loop-stages';
 const PlaybotAnimator = pc.createScript('PlaybotAnimator');
 extendScript(PlaybotAnimator, Animator, attributes);
 
-// PlaybotAnimator.prototype.listener = null;
 PlaybotAnimator.prototype._playbotJumpAnimator = null;
 
 PlaybotAnimator.prototype.initialize = function () {
@@ -23,45 +22,22 @@ PlaybotAnimator.prototype.syncedUpdate = function (dt) {
   this.time += (dt * this.speed);
 };
 
-// PlaybotAnimator.prototype.update = defaultUpdate;
-
-PlaybotAnimator.prototype.startIdleAnimation = function (reverse) {
-  this.startAnimation('Playbot_idle', reverse, true);
+PlaybotAnimator.prototype.startIdleAnimation = function () {
+  this.startAnimation('Playbot_idle', true);
   this.speed = 1;
 };
 
-PlaybotAnimator.prototype.startRunAnimation = function (reverse) {
-  this.startAnimation('Playbot_run', reverse, true);
+PlaybotAnimator.prototype.startRunAnimation = function () {
+  this.startAnimation('Playbot_run', true);
   this.speed = 1;
 };
 
-PlaybotAnimator.prototype.startJumpAnimation = function (reverse, length) {
-  this.startAnimation('Playbot_jump', reverse, false);
-  // this.update = this.jumpAnimation;
+PlaybotAnimator.prototype.startJumpAnimation = function (length) {
+  this.startAnimation('Playbot_jump', false);
   this.speed = this.getCurrentDuration() / length;
 };
 
-PlaybotAnimator.prototype.startDieAnimation = function (reverse) {
-  this.startAnimation('Playbot_die', reverse, false);
+PlaybotAnimator.prototype.startDieAnimation = function () {
+  this.startAnimation('Playbot_die', false);
   this.speed = 1;
 };
-
-// PlaybotAnimator.prototype.jumpAnimation = function (/* dt */) {
-//   const progress = this.getAnimationProgress();
-//   console.log(progress);
-//   if (progress < 1.0) {
-//     // this._onJumpProgressChanged(progress);
-//     this._playbotJumpAnimator.onTimeChanged(progress);
-//     return;
-//   }
-
-//   // this._onJumpProgressChanged(1);
-//   this._playbotJumpAnimator.onTimeChanged(progress);
-
-//   this.update = defaultUpdate;
-// };
-
-// PlaybotAnimator.prototype._onJumpProgressChanged = function (progress) {
-//   // this.listener.onTimeChanged(progress);
-//   this._playbotJumpAnimator.onTimeChanged(progress);
-// };
