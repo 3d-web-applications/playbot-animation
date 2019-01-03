@@ -1,6 +1,6 @@
 import { registerFunction } from '../utils/main-loop';
 import { PerformActions } from '../utils/main-loop-stages';
-import { PlayerState } from '../player/player-states';
+import { PlayerState } from './player-states';
 
 import {
   Forward, /* Backward, */Idle, Run, Jump, Die, RunAndJump,
