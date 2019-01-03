@@ -55,6 +55,9 @@ PlayerController.prototype.initialize = function () {
   PlaybotMotionTracking._listener.push(this._selectActiveAnimation.bind(this));
 
   PlaybotAnimator.animation = this._animatedEntity.animation;
+
+  this._dynamicEntity.collision.on('collisionstart', this._onGroundEntered, this);
+  this._dynamicEntity.collision.on('collisionend', this._onGroundLeft, this);
 };
 
 PlayerController.prototype.postInitialize = function () {
@@ -113,4 +116,14 @@ PlayerController.prototype._onAnimationStateChanged = function () {
     default:
       break;
   }
+};
+
+PlayerController.prototype._onGroundEntered = function () {
+  console.log('_onGroundEntered');
+  this._onGround = true;
+};
+
+PlayerController.prototype._onGroundLeft = function () {
+  console.log('_onGroundLeft');
+  this._onGround = false;
 };
