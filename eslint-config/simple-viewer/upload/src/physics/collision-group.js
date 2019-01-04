@@ -4,7 +4,8 @@ CollisionGroup.attributes.add('_entities', {
   type: 'entity',
   array: true,
   title: 'Entities',
-  description: 'Entities with rigid body components.',
+  description: `Entities with rigid body components. If array stays empty,
+    the custom collision group is applied to the script owner!`,
 });
 
 CollisionGroup.attributes.add('_resetDefault', {
@@ -40,7 +41,11 @@ CollisionGroup.prototype.initialize = function () {
   if (_group7) bitmask |= pc.BODYGROUP_USER_7;
   if (_group8) bitmask |= pc.BODYGROUP_USER_8;
 
-  _entities.forEach(e => this._updateCollisionGroup(e, bitmask));
+  if (_entities.length) {
+    _entities.forEach(e => this._updateCollisionGroup(e, bitmask));
+  } else {
+    this._updateCollisionGroup(this.entity, bitmask);
+  }
 };
 
 CollisionGroup.prototype._updateCollisionGroup = function

@@ -4,7 +4,8 @@ CollisionMask.attributes.add('_entities', {
   type: 'entity',
   array: true,
   title: 'Entities',
-  description: 'Entities with rigid body components.',
+  description: `Entities with rigid body components. If array stays empty,
+    the custom collision mask is applied to the script owner!`,
 });
 
 CollisionMask.attributes.add('_useTrigger', {
@@ -42,7 +43,11 @@ CollisionMask.prototype.initialize = function () {
   if (_mask7) bitmask |= pc.BODYGROUP_USER_7;
   if (_mask8) bitmask |= pc.BODYGROUP_USER_8;
 
-  _entities.forEach(e => this._updateCollisionMask(e, bitmask));
+  if (_entities.lenght) {
+    _entities.forEach(e => this._updateCollisionMask(e, bitmask));
+  } else {
+    this._updateCollisionMask(this.entity, bitmask);
+  }
 };
 
 CollisionMask.prototype._updateCollisionMask = function
