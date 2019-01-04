@@ -1,3 +1,5 @@
+import { Layers } from './collision-layer-names';
+
 const CollisionMask = pc.createScript('CollisionMask');
 
 CollisionMask.attributes.add('_entities', {
@@ -20,7 +22,7 @@ for (let index = 1; index <= 8; index += 1) {
   CollisionMask.attributes.add(`_mask${index}`, {
     type: 'boolean',
     default: false,
-    title: `Mask ${index}`,
+    title: Layers[`BODYGROUP_USER_${index}`],
     description: 'If true, all entities belong to this mask.',
   });
 }

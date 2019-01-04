@@ -1,3 +1,5 @@
+import { Layers } from './collision-layer-names';
+
 const CollisionGroup = pc.createScript('CollisionGroup');
 
 CollisionGroup.attributes.add('_entities', {
@@ -19,7 +21,7 @@ for (let index = 1; index <= 8; index += 1) {
   CollisionGroup.attributes.add(`_group${index}`, {
     type: 'boolean',
     default: false,
-    title: `Group ${index}`,
+    title: Layers[`BODYGROUP_USER_${index}`],
     description: 'If true, all entities belong to this group.',
   });
 }
