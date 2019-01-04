@@ -9,7 +9,7 @@ CollisionGroup.attributes.add('_entities', {
 
 CollisionGroup.attributes.add('_resetDefault', {
   type: 'boolean',
-  default: true,
+  default: false,
   title: 'Reset Default',
   description: 'If true, entities will loose their default collision group.',
 });
@@ -44,9 +44,9 @@ CollisionGroup.prototype.initialize = function () {
 };
 
 CollisionGroup.prototype._updateCollisionGroup = function
-(entity, bitmask) {
+(targetEntity, bitmask) {
   const { _resetDefault } = this;
-  const { rigidbody } = entity;
+  const { rigidbody } = targetEntity;
   if (!rigidbody) {
     return;
   }

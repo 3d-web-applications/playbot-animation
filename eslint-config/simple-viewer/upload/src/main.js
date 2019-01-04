@@ -8,4 +8,5 @@ import './player/player-controller';
 import './player/player-input';
 import './player/playbot-locomotion';
 import './player/playbot-motion-tracking';
-import './physics/collision-layer';
+import './physics/collision-group';
+import './physics/collision-mask';
