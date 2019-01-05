@@ -1,31 +1,18 @@
-import { Layers } from './collision-layer-names';
+import { Entities, ResetDefault, MakeGroup }
+  from './collision-group-attributes';
 
-const CollisionGroup = pc.createScript('CollisionGroup');
-const { attributes, prototype } = CollisionGroup;
+const { attributes, prototype } = pc.createScript('CollisionGroup');
 
-attributes.add('_entities', {
-  type: 'entity',
-  array: true,
-  title: 'Entities',
-  description: `Entities with rigid body components. If array stays empty,
-    the custom collision group is applied to the script owner!`,
-});
-
-attributes.add('_resetDefault', {
-  type: 'boolean',
-  default: false,
-  title: 'Reset Default',
-  description: 'If true, entities will loose their default collision group.',
-});
-
-for (let index = 1; index <= 8; index += 1) {
-  attributes.add(`_group${index}`, {
-    type: 'boolean',
-    default: false,
-    title: Layers[`BODYGROUP_USER_${index}`],
-    description: 'If true, all entities belong to this group.',
-  });
-}
+attributes.add('_entities', Entities);
+attributes.add('_resetDefault', ResetDefault);
+attributes.add('_group1', MakeGroup(1));
+attributes.add('_group2', MakeGroup(2));
+attributes.add('_group3', MakeGroup(3));
+attributes.add('_group4', MakeGroup(4));
+attributes.add('_group5', MakeGroup(5));
+attributes.add('_group6', MakeGroup(6));
+attributes.add('_group7', MakeGroup(7));
+attributes.add('_group8', MakeGroup(8));
 
 // TODO setup function for controller instead of initialize
 prototype.initialize = function () {

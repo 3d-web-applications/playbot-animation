@@ -1,34 +1,20 @@
-import { Layers } from './collision-layer-names';
+import { Entities, UseTrigger, MakeMask } from './collision-mask-attributes';
 
-const CollisionMask = pc.createScript('CollisionMask');
+const { attributes, prototype } = pc.createScript('CollisionMask');
 
-CollisionMask.attributes.add('_entities', {
-  type: 'entity',
-  array: true,
-  title: 'Entities',
-  description: `Entities with rigid body components. If array stays empty,
-    the custom collision mask is applied to the script owner!`,
-});
-
-CollisionMask.attributes.add('_useTrigger', {
-  type: 'boolean',
-  default: true,
-  title: 'Use Trigger',
-  description: `If true, entities can trigger events on other entities
-    having a collision component, but no rigidbody component.`,
-});
-
-for (let index = 1; index <= 8; index += 1) {
-  CollisionMask.attributes.add(`_mask${index}`, {
-    type: 'boolean',
-    default: false,
-    title: Layers[`BODYGROUP_USER_${index}`],
-    description: 'If true, all entities belong to this mask.',
-  });
-}
+attributes.add('_entities', Entities);
+attributes.add('_useTrigger', UseTrigger);
+attributes.add('_mask1', MakeMask(1));
+attributes.add('_mask2', MakeMask(2));
+attributes.add('_mask3', MakeMask(3));
+attributes.add('_mask4', MakeMask(4));
+attributes.add('_mask5', MakeMask(5));
+attributes.add('_mask6', MakeMask(6));
+attributes.add('_mask7', MakeMask(7));
+attributes.add('_mask8', MakeMask(8));
 
 // TODO setup function for controller instead of initialize
-CollisionMask.prototype.initialize = function () {
+prototype.initialize = function () {
   const {
     _mask1, _mask2, _mask3, _mask4, _mask5, _mask6, _mask7, _mask8,
     _entities, _useTrigger,
@@ -52,7 +38,7 @@ CollisionMask.prototype.initialize = function () {
   }
 };
 
-CollisionMask.prototype._updateCollisionMask = function
+prototype._updateCollisionMask = function
 (targetEntity, bitmask) {
   const { rigidbody } = targetEntity;
   if (!rigidbody) {
