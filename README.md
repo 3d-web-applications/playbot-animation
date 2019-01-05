@@ -105,3 +105,52 @@ The current implementation consists of 5 stages. Scripts can register their publ
 
 ### Notes
 - The final amount of necessary stages depends on the problem, which should be solved. In this project, I have started with a single stage. But when I encountered some problems with the jump animation, I have reworked my previous main loop. The main problem was, that I could not detect when my main character would land on uneven floors. Neither the time within the air nor the height above the floor could be used to pick a proper keyframe from the jump animation.
+
+## Code Convention
+
+The PlayCanvas developers have changed their coding conventions in the past. At the beginning scripts were defined like this one:
+```javascript
+pc.script.create('myScript', function() {
+  var MyScript = function (entity) {
+    this.entity = entity;
+  };
+  
+  MyScript.prototype = {
+    initialize: function () {
+      // ...
+    },
+  return MyScript;
+});
+```
+Now they propose to use something like this
+```javascript
+var MyScript = pc.createScript('myScript');
+
+MyScript.attributes.add('myAttribute', {
+// ...
+});
+
+MyScript.prototype.initialize = function () {
+  // ...
+}
+```
+I was using the second convention for at least a half of a year, until I have learned, how to upload scripts with webpack. Since then I have improved my own conventions. First of all, let us talk about some rules!
+- Even if there are no real private functions in Javascript, use the underscore to mark attributes and functions as private.
+- Go on with defining all attributes.
+- Afterwards implement getters and setters via Object.defineProperty
+- At the end declare all functions. Start with PlayCanvas default functions, e.g. initialize, update, postInitialize, postUpdate
+
+When using esLint, you will see for sure, that you still can improve your code. But be careful. For instance, you will see that some lines will exceed the max line length. Now one could say, why not declaring all functions in one prototype body, like seen below ```javascript
+/** Important note: Both styles below do not work in PlayCanvas
+CollisionGroup.prototype = {
+  initialize: function () { ...
+};
+```
+Because it does not work when hitting the 'Play' button!
+
+Another common mistake is to use arrow functions. Even in prototype bodys. The same errors will occur. That's why you should always avoid using arrow functions when you work with prototypes.
+```javascript
+CollisionGroup.prototype = {
+  initialize: () => { ..
+};
+```
