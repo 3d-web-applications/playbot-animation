@@ -140,8 +140,9 @@ I was using the second convention for at least a half of a year, until I have le
 - Afterwards implement getters and setters via Object.defineProperty
 - At the end declare all functions. Start with PlayCanvas default functions, e.g. initialize, update, postInitialize, postUpdate
 
-When using esLint, you will see for sure, that you still can improve your code. But be careful. For instance, you will see that some lines will exceed the max line length. Now one could say, why not declaring all functions in one prototype body, like seen below ```javascript
-/** Important note: Both styles below do not work in PlayCanvas
+When using esLint, you will see for sure, that you still can improve your code. But be careful. For instance, you will see that some lines will exceed the max line length. Now one could say, why not declaring all functions in one prototype body, like seen below 
+
+```javascript
 CollisionGroup.prototype = {
   initialize: function () { ...
 };
