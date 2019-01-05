@@ -1,8 +1,9 @@
 import { Layers } from './collision-layer-names';
 
 const CollisionGroup = pc.createScript('CollisionGroup');
+const { attributes, prototype } = CollisionGroup;
 
-CollisionGroup.attributes.add('_entities', {
+attributes.add('_entities', {
   type: 'entity',
   array: true,
   title: 'Entities',
@@ -10,7 +11,7 @@ CollisionGroup.attributes.add('_entities', {
     the custom collision group is applied to the script owner!`,
 });
 
-CollisionGroup.attributes.add('_resetDefault', {
+attributes.add('_resetDefault', {
   type: 'boolean',
   default: false,
   title: 'Reset Default',
@@ -18,7 +19,7 @@ CollisionGroup.attributes.add('_resetDefault', {
 });
 
 for (let index = 1; index <= 8; index += 1) {
-  CollisionGroup.attributes.add(`_group${index}`, {
+  attributes.add(`_group${index}`, {
     type: 'boolean',
     default: false,
     title: Layers[`BODYGROUP_USER_${index}`],
@@ -27,7 +28,7 @@ for (let index = 1; index <= 8; index += 1) {
 }
 
 // TODO setup function for controller instead of initialize
-CollisionGroup.prototype.initialize = function () {
+prototype.initialize = function () {
   const {
     _group1, _group2, _group3, _group4, _group5, _group6, _group7, _group8,
     _entities,
@@ -50,8 +51,7 @@ CollisionGroup.prototype.initialize = function () {
   }
 };
 
-CollisionGroup.prototype._updateCollisionGroup = function
-(targetEntity, bitmask) {
+prototype._updateCollisionGroup = function (targetEntity, bitmask) {
   const { _resetDefault } = this;
   const { rigidbody } = targetEntity;
   if (!rigidbody) {
@@ -64,3 +64,13 @@ CollisionGroup.prototype._updateCollisionGroup = function
 
   rigidbody.group |= bitmask;
 };
+
+/** Important note: Both styles below do not work in PlayCanvas
+CollisionGroup.prototype = {
+  initialize: function () { ...
+};
+
+CollisionGroup.prototype = {
+  initialize: () => { ..
+};
+ */
