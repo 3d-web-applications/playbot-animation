@@ -1,4 +1,4 @@
-import { Layers } from './collision-layer-names';
+import { Layers } from './data/collision-layer-names';
 
 const Entities = {
   type: 'entity',
