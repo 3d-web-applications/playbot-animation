@@ -45,7 +45,7 @@ CollisionMask.prototype.initialize = function () {
   if (_mask7) bitmask |= pc.BODYGROUP_USER_7;
   if (_mask8) bitmask |= pc.BODYGROUP_USER_8;
 
-  if (_entities.lenght) {
+  if (_entities.length) {
     _entities.forEach(e => this._updateCollisionMask(e, bitmask));
   } else {
     this._updateCollisionMask(this.entity, bitmask);
