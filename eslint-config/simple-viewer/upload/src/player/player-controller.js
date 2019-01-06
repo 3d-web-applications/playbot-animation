@@ -7,7 +7,8 @@ const PlayerController = pc.createScript('PlayerController');
 PlayerController.attributes.add('_dynamicEntity', {
   type: 'entity',
   title: 'Dynamic Entity',
-  description: 'Entity with a collision component and a rigid body component. The latter type must be set to dynamic!',
+  description: `Entity with a collision component and a rigid body
+   component. The latter type must be set to dynamic!`,
 });
 
 PlayerController.attributes.add('_animatedEntity', {
@@ -56,8 +57,8 @@ PlayerController.prototype.initialize = function () {
 
   PlaybotAnimator.animation = this._animatedEntity.animation;
 
-  this._dynamicEntity.collision.on('collisionstart', this._onGroundEntered, this);
-  this._dynamicEntity.collision.on('collisionend', this._onGroundLeft, this);
+  _dynamicEntity.collision.on('collisionstart', this._onGroundEntered, this);
+  _dynamicEntity.collision.on('collisionend', this._onGroundLeft, this);
 };
 
 PlayerController.prototype.postInitialize = function () {
@@ -119,11 +120,11 @@ PlayerController.prototype._onAnimationStateChanged = function () {
 };
 
 PlayerController.prototype._onGroundEntered = function () {
-  console.log('_onGroundEntered');
+  // console.log('_onGroundEntered');
   this._onGround = true;
 };
 
 PlayerController.prototype._onGroundLeft = function () {
-  console.log('_onGroundLeft');
+  // console.log('_onGroundLeft');
   this._onGround = false;
 };
