@@ -143,15 +143,56 @@ I was using the second convention for at least a half of a year, until I have le
 When using esLint, you will see for sure, that you still can improve your code. But be careful. For instance, you will see that some lines will exceed the max line length. Now one could say, why not declaring all functions in one prototype body, like seen below 
 
 ```javascript
-CollisionGroup.prototype = {
-  initialize: function () { ...
+MyScript.prototype = {
+  initialize: function () { // ...
 };
 ```
 Because it does not work when hitting the 'Play' button!
 
 Another common mistake is to use arrow functions. Even in prototype bodys. The same errors will occur. That's why you should always avoid using arrow functions when you work with prototypes.
 ```javascript
-CollisionGroup.prototype = {
-  initialize: () => { ..
+MyScript.prototype = {
+  initialize: () => { // ...
 };
 ```
+Are we doomed to always add the prefix 'MyScript.prototype.' infront of the most functions? The short answer is 'no'. You could declare a constant on top of the function declarations.
+```javascript
+const attributes = MyScript.attributes;
+const prototype = MyScript.prototype;
+
+attributes.add('myAttribute', {
+// ...
+});
+
+prototype.initialize = function () {
+  // ...
+}
+```
+We can go one step further and use the destructuring assigment.
+```javascript
+const { attributes, prototype } = pc.createScript('CollisionGroup');
+
+attributes.add('myAttribute', {
+  // ...
+});
+
+prototype.initialize = function () {
+  // ...
+}
+```
+The advantage of using the destructuring assignment is to avoid inconsistencies when renaming scripts. Don't get me wrong. Even with the proposed standard convention one has to change the name of a script only in one place<sup>1</sup>. But then the corresponding variable would still keep the old name. See for yourself below.
+```javascript
+var MyScript = pc.createScript('myRenamedScript');
+
+MyScript.attributes.add('myAttribute', {
+// ...
+});
+
+MyScript.prototype.initialize = function () {
+  // ...
+}
+```
+So, to keep scripts as clean as possible it would be necessary to also rename all occurrences of the main variable. But this can introduce further errors.
+
+### Footnotes
+1. After renaming and uploading scripts, don't forget to hit the 'Parse' button in the PlayCanvas Editor!
