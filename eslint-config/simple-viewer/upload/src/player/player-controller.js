@@ -18,10 +18,25 @@ attributes.add('_animatedEntity', {
   description: 'Entity with a model component and an animation component.',
 });
 
+attributes.add('_pivotEntity', {
+  type: 'entity',
+  title: 'Pivot Entity',
+  description: 'Pivot point for the dynamic entity.',
+});
+
 attributes.add('_groundLayer', {
   type: 'number',
   enum: collisionLayerEnum,
   default: pc.BODYGROUP_USER_1,
+  title: 'Ground Layer',
+});
+
+attributes.add('_maxJumpHeight', {
+  type: 'number',
+  default: 1,
+  title: 'Max Jump Height',
+  description: `Defines the maximum height when jumping from a flat ground.
+    Moreover it is used to track the progress of jump animation.`,
 });
 
 Object.defineProperty(prototype, 'animationState', {
@@ -42,7 +57,9 @@ prototype._precision = 0.001;
 prototype._onGround = false;
 
 prototype.initialize = function () {
-  const { entity, _dynamicEntity } = this;
+  const {
+    entity, _dynamicEntity, _pivotEntity, _maxJumpHeight,
+  } = this;
   const {
     PlayerInput, PlaybotLocomotion, PlaybotMotionTracking, PlaybotAnimator,
   } = entity.script;
@@ -60,7 +77,7 @@ prototype.initialize = function () {
 
   PlaybotLocomotion.setup(_dynamicEntity.rigidbody);
 
-  PlaybotMotionTracking.setup(_dynamicEntity);
+  PlaybotMotionTracking.setup(_dynamicEntity, _pivotEntity, _maxJumpHeight);
   PlaybotMotionTracking._listener.push(this._selectActiveAnimation.bind(this));
 
   PlaybotAnimator.animation = this._animatedEntity.animation;
@@ -94,10 +111,11 @@ prototype._computeIntensity = function (flagA, flagB) {
 
 prototype._selectActiveAnimation = function () {
   const { entity, _precision } = this;
-  const { PlaybotMotionTracking } = entity.script;
+  const { PlaybotMotionTracking, PlaybotAnimator } = entity.script;
 
   if (Math.abs(PlaybotMotionTracking.dy) > _precision) {
     this.animationState = 0;
+    PlaybotAnimator.animation.currentTime = PlaybotMotionTracking.flightHeight;
     return;
   }
 

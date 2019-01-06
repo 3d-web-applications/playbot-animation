@@ -33,9 +33,9 @@ prototype.startRunAnimation = function () {
   this.speed = 1;
 };
 
-prototype.startJumpAnimation = function (length) {
+prototype.startJumpAnimation = function () {
   this.startAnimation('Playbot_jump', false);
-  this.speed = this.getCurrentDuration() / length;
+  this.speed = 0;
 };
 
 prototype.startDieAnimation = function () {
