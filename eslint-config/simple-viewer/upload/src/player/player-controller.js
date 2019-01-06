@@ -112,20 +112,24 @@ prototype._computeIntensity = function (flagA, flagB) {
 prototype._selectActiveAnimation = function () {
   const { entity, _precision } = this;
   const { PlaybotMotionTracking, PlaybotAnimator } = entity.script;
+  const {
+    dx, dy, dz, flightHeight,
+  } = PlaybotMotionTracking;
 
-  if (Math.abs(PlaybotMotionTracking.dy) > _precision) {
+  if (Math.abs(dy) > _precision) {
     this.animationState = 0;
-    PlaybotAnimator.animation.currentTime = PlaybotMotionTracking.flightHeight;
+    PlaybotAnimator.animation.currentTime = flightHeight; // TODO inaccurate
     return;
   }
 
-  if (Math.abs(PlaybotMotionTracking.dx) < _precision
-    && Math.abs(PlaybotMotionTracking.dz) < _precision) {
+  if (Math.abs(dx) < _precision
+    && Math.abs(dz) < _precision) {
     this.animationState = 2;
     return;
   }
 
   this.animationState = 1;
+  PlaybotAnimator.time += Math.sqrt(dx * dx + dz * dz);
 };
 
 prototype._onAnimationStateChanged = function () {
