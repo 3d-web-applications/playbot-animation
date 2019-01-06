@@ -233,6 +233,8 @@ prototype._onMyPrivateVariableChanged = function () { /*...*/ };
 ```
 You might note, that I list all private variables above the functions, instead of only declaring them inside functions when they are required. I accept the small overhead in return for a better readability. When using JSDoc, it becomess even more important.
 
+There is one more to say to my current conventions. I am currently evaluating strategies, where the objects, used to define the script attributes, were outsourced. This would end up in something similar to header files from C or C++.
+
 ### Footnotes
 1. Be careful when using the destructuring assignment inside functions from a script. This can also introduce new errors. A common mistake is to pick functions from that script. This will end in losing the binding.
 2. After renaming and uploading scripts, don't forget to hit the 'Parse' button in the PlayCanvas Editor!
