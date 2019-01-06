@@ -180,7 +180,7 @@ prototype.initialize = function () {
   // ...
 }
 ```
-The advantage of using the destructuring assignment is to avoid inconsistencies when renaming scripts. Don't get me wrong. Even with the proposed standard convention one has to change the name of a script only in one place<sup>1</sup>. But then the corresponding variable would still keep the old name. See for yourself below.
+The advantage of using the destructuring assignment<sup>1</sup> is to avoid inconsistencies when renaming scripts. Don't get me wrong. Even with the proposed standard convention one has to change the name of a script only in one place<sup>2</sup>. But then the corresponding variable would still keep the old name. See for yourself below.
 ```javascript
 var MyScript = pc.createScript('myRenamedScript');
 
@@ -234,4 +234,5 @@ prototype._onMyPrivateVariableChanged = function () { /*...*/ };
 You might note, that I list all private variables above the functions, instead of only declaring them inside functions when they are required. I accept the small overhead in return for a better readability. When using JSDoc, it becomess even more important.
 
 ### Footnotes
-1. After renaming and uploading scripts, don't forget to hit the 'Parse' button in the PlayCanvas Editor!
+1. Be careful when using the destructuring assignment inside functions from a script. This can also introduce new errors. A common mistake is to pick functions from that script. This will end in losing the binding.
+2. After renaming and uploading scripts, don't forget to hit the 'Parse' button in the PlayCanvas Editor!
