@@ -14,7 +14,6 @@ attributes.add('_group6', MakeGroup(6));
 attributes.add('_group7', MakeGroup(7));
 attributes.add('_group8', MakeGroup(8));
 
-// TODO setup function for controller instead of initialize
 prototype.initialize = function () {
   const {
     _group1, _group2, _group3, _group4, _group5, _group6, _group7, _group8,
@@ -51,13 +50,3 @@ prototype._updateCollisionGroup = function (targetEntity, bitmask) {
 
   rigidbody.group |= bitmask;
 };
-
-/** Important note: Both styles below do not work in PlayCanvas
-CollisionGroup.prototype = {
-  initialize: function () { ...
-};
-
-CollisionGroup.prototype = {
-  initialize: () => { ..
-};
- */

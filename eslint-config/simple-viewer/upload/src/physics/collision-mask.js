@@ -13,7 +13,6 @@ attributes.add('_mask6', MakeMask(6));
 attributes.add('_mask7', MakeMask(7));
 attributes.add('_mask8', MakeMask(8));
 
-// TODO setup function for controller instead of initialize
 prototype.initialize = function () {
   const {
     _mask1, _mask2, _mask3, _mask4, _mask5, _mask6, _mask7, _mask8,
