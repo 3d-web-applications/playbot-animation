@@ -1,10 +1,10 @@
-const KeyboardInput = pc.createScript('keyboardInput');
+const { prototype } = pc.createScript('keyboardInput');
 
-KeyboardInput.prototype.initialize = function () {
+prototype.initialize = function () {
   this.orbitCamera = this.entity.script.orbitCamera;
 };
 
-KeyboardInput.prototype.postInitialize = function () {
+prototype.postInitialize = function () {
   if (this.orbitCamera) {
     this.startDistance = this.orbitCamera.distance;
     this.startYaw = this.orbitCamera.yaw;
@@ -13,7 +13,7 @@ KeyboardInput.prototype.postInitialize = function () {
   }
 };
 
-KeyboardInput.prototype.update = function (/* dt */) {
+prototype.update = function (/* dt */) {
   if (this.orbitCamera) {
     if (this.app.keyboard.wasPressed(pc.KEY_SPACE)) {
       this.orbitCamera.reset(

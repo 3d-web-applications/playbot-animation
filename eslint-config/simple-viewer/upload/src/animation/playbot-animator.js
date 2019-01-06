@@ -1,43 +1,44 @@
-import { Animator, attributes } from './animator';
-import extendScript from '../utils/extend-script';
+import { base } from './animator';
+import { extendScript } from '../utils/extend-script';
 import { registerFunction } from '../utils/main-loop';
 import { RefreshView } from '../utils/main-loop-stages';
 
-const PlaybotAnimator = pc.createScript('PlaybotAnimator');
-extendScript(PlaybotAnimator, Animator, attributes);
+const script = pc.createScript('PlaybotAnimator');
+extendScript(script, base);
+const { prototype } = script;
 
-PlaybotAnimator.prototype._playbotJumpAnimator = null;
+prototype._playbotJumpAnimator = null;
 
-PlaybotAnimator.prototype.initialize = function () {
+prototype.initialize = function () {
   this.super();
   this._playbotJumpAnimator = this.entity.script.PlaybotJump;
   this.startIdleAnimation();
 };
 
-PlaybotAnimator.prototype.postInitialize = function () {
+prototype.postInitialize = function () {
   registerFunction(this.syncedUpdate.bind(this), RefreshView);
 };
 
-PlaybotAnimator.prototype.syncedUpdate = function (dt) {
+prototype.syncedUpdate = function (dt) {
   this.time += (dt * this.speed);
 };
 
-PlaybotAnimator.prototype.startIdleAnimation = function () {
+prototype.startIdleAnimation = function () {
   this.startAnimation('Playbot_idle', true);
   this.speed = 1;
 };
 
-PlaybotAnimator.prototype.startRunAnimation = function () {
+prototype.startRunAnimation = function () {
   this.startAnimation('Playbot_run', true);
   this.speed = 1;
 };
 
-PlaybotAnimator.prototype.startJumpAnimation = function (length) {
+prototype.startJumpAnimation = function (length) {
   this.startAnimation('Playbot_jump', false);
   this.speed = this.getCurrentDuration() / length;
 };
 
-PlaybotAnimator.prototype.startDieAnimation = function () {
+prototype.startDieAnimation = function () {
   this.startAnimation('Playbot_die', false);
   this.speed = 1;
 };

@@ -1,20 +1,20 @@
-const TouchInput = pc.createScript('touchInput');
+const { attributes, prototype } = pc.createScript('touchInput');
 
-TouchInput.attributes.add('orbitSensitivity', {
+attributes.add('orbitSensitivity', {
   type: 'number',
   default: 0.4,
   title: 'Orbit Sensitivity',
   description: 'How fast the camera moves around the orbit. Higher is faster',
 });
 
-TouchInput.attributes.add('distanceSensitivity', {
+attributes.add('distanceSensitivity', {
   type: 'number',
   default: 0.2,
   title: 'Distance Sensitivity',
   description: 'How fast the camera moves in and out. Higher is faster',
 });
 
-TouchInput.prototype.initialize = function () {
+prototype.initialize = function () {
   this.orbitCamera = this.entity.script.orbitCamera;
 
   // Store the position of the touch so we can calculate the distance moved
@@ -42,7 +42,7 @@ TouchInput.prototype.initialize = function () {
   }
 };
 
-TouchInput.prototype.getPinchDistance = function (pointA, pointB) {
+prototype.getPinchDistance = function (pointA, pointB) {
   // Return the distance between the two points
   const dx = pointA.x - pointB.x;
   const dy = pointA.y - pointB.y;
@@ -50,7 +50,7 @@ TouchInput.prototype.getPinchDistance = function (pointA, pointB) {
   return Math.sqrt((dx * dx) + (dy * dy));
 };
 
-TouchInput.prototype.calcMidPoint = function (pointA, pointB, result) {
+prototype.calcMidPoint = function (pointA, pointB, result) {
   const newResult = result;
   result.set(pointB.x - pointA.x, pointB.y - pointA.y);
   result.scale(0.5);
@@ -59,7 +59,7 @@ TouchInput.prototype.calcMidPoint = function (pointA, pointB, result) {
   return newResult;
 };
 
-TouchInput.prototype.onTouchStartEndCancel = function (event) {
+prototype.onTouchStartEndCancel = function (event) {
   // We only care about the first touch for camera rotation. As the user touches the screen,
   // we stored the current touch position
   const { touches } = event;
@@ -74,13 +74,11 @@ TouchInput.prototype.onTouchStartEndCancel = function (event) {
   }
 };
 
-TouchInput.fromWorldPoint = new pc.Vec3();
-TouchInput.toWorldPoint = new pc.Vec3();
-TouchInput.worldDiff = new pc.Vec3();
+const fromWorldPoint = new pc.Vec3();
+const toWorldPoint = new pc.Vec3();
+const worldDiff = new pc.Vec3();
 
-TouchInput.prototype.pan = function (midPoint) {
-  const { fromWorldPoint, toWorldPoint, worldDiff } = TouchInput;
-
+prototype.pan = function (midPoint) {
   // For panning to work at any zoom level, we use screen point to world projection
   // to work out how far we need to pan the pivotEntity in world space
   const { camera } = this.entity;
@@ -96,11 +94,9 @@ TouchInput.prototype.pan = function (midPoint) {
   this.orbitCamera.pivotPoint.add(worldDiff);
 };
 
-TouchInput.pinchMidPoint = new pc.Vec2();
+let pinchMidPoint = new pc.Vec2();
 
-TouchInput.prototype.onTouchMove = function (event) {
-  let { pinchMidPoint } = TouchInput;
-
+prototype.onTouchMove = function (event) {
   // We only care about the first touch for camera rotation. Work out the difference moved since the last event
   // and use that to update the camera target position
   const { touches } = event;

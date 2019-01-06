@@ -1,7 +1,7 @@
 /**
  * Decorator to store attributes attached to a specific script.
  * @param {Function} fn Required. Function to be decorated
- * @param {Array} attr Required. Array of attribute names and their description
+ * @param {Array} attributes Required. Array of attribute names and their description
  * @example
  * const attributes = [];
  * Animator.attributes.add = collectAttributes(Animator.attributes.add, attributes);

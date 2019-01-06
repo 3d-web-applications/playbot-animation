@@ -1,20 +1,20 @@
-const MouseInput = pc.createScript('mouseInput');
+const { attributes, prototype } = pc.createScript('mouseInput');
 
-MouseInput.attributes.add('orbitSensitivity', {
+attributes.add('orbitSensitivity', {
   type: 'number',
   default: 0.3,
   title: 'Orbit Sensitivity',
   description: 'How fast the camera moves around the orbit. Higher is faster',
 });
 
-MouseInput.attributes.add('distanceSensitivity', {
+attributes.add('distanceSensitivity', {
   type: 'number',
   default: 0.15,
   title: 'Distance Sensitivity',
   description: 'How fast the camera moves in and out. Higher is faster',
 });
 
-MouseInput.prototype.initialize = function () {
+prototype.initialize = function () {
   this.orbitCamera = this.entity.script.orbitCamera;
 
   if (this.orbitCamera) {
@@ -52,13 +52,11 @@ MouseInput.prototype.initialize = function () {
   this.lastPoint = new pc.Vec2();
 };
 
-MouseInput.fromWorldPoint = new pc.Vec3();
-MouseInput.toWorldPoint = new pc.Vec3();
-MouseInput.worldDiff = new pc.Vec3();
+const fromWorldPoint = new pc.Vec3();
+const toWorldPoint = new pc.Vec3();
+const worldDiff = new pc.Vec3();
 
-MouseInput.prototype.pan = function (screenPoint) {
-  const { fromWorldPoint, toWorldPoint, worldDiff } = MouseInput;
-
+prototype.pan = function (screenPoint) {
   // For panning to work at any zoom level, we use screen point to world projection
   // to work out how far we need to pan the pivotEntity in world space
   const { camera } = this.entity;
@@ -74,7 +72,7 @@ MouseInput.prototype.pan = function (screenPoint) {
   this.orbitCamera.pivotPoint.add(worldDiff);
 };
 
-MouseInput.prototype.onMouseDown = function (event) {
+prototype.onMouseDown = function (event) {
   switch (event.button) {
     case pc.MOUSEBUTTON_LEFT:
       this.lookButtonDown = true;
@@ -88,7 +86,7 @@ MouseInput.prototype.onMouseDown = function (event) {
   }
 };
 
-MouseInput.prototype.onMouseUp = function (event) {
+prototype.onMouseUp = function (event) {
   switch (event.button) {
     case pc.MOUSEBUTTON_LEFT:
       this.lookButtonDown = false;
@@ -102,7 +100,7 @@ MouseInput.prototype.onMouseUp = function (event) {
   }
 };
 
-MouseInput.prototype.onMouseMove = function (event) {
+prototype.onMouseMove = function (event) {
   if (this.lookButtonDown) {
     this.orbitCamera.pitch -= event.dy * this.orbitSensitivity;
     this.orbitCamera.yaw -= event.dx * this.orbitSensitivity;
@@ -114,14 +112,14 @@ MouseInput.prototype.onMouseMove = function (event) {
 };
 
 
-MouseInput.prototype.onMouseWheel = function (event) {
+prototype.onMouseWheel = function (event) {
   this.orbitCamera.distance -= event.wheel
     * this.distanceSensitivity * (this.orbitCamera.distance * 0.1);
   event.event.preventDefault();
 };
 
 
-MouseInput.prototype.onMouseOut = function (/* event */) {
+prototype.onMouseOut = function (/* event */) {
   this.lookButtonDown = false;
   this.panButtonDown = false;
 };

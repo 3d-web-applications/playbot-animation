@@ -1,26 +1,42 @@
 /**
- * @summary Extend a script by an amount of functions, properties and attributes.
- * @param {Object} child - Required. Object which should be extended.
- * @param {Object} parent - Required. The object prototype is used to clone functions and properties.
- * @param {Array} attribute - Optional. Array of attributes which should be displayed in the PlayCanvas editor.
+ * Inherit attributes from parent script.
+ * @param {Object} script Required. Child script including attributes property.
+ * @param {Object} base Required. Parent script including attributes property.
  */
-const extendScript = (child, parent, attributes) => {
-  // Without this loop, attributes will still be applied to the child, but they will not show up in the PlayCanvas Editor.
-  if (Array.isArray(attributes)) {
-    attributes.forEach((attribute) => {
-      child.attributes.add(attribute.name, attribute.object);
-    });
-  }
+const inheritAttributes = (script, base) => {
+  base.attributes.forEach((attribute) => {
+    script.attributes.add(attribute.name, attribute.object);
+  });
+};
 
-  /* eslint no-param-reassign: "error" */
+/* eslint-disable no-param-reassign */
+
+/**
+ * Inherit functions and properties from parent script
+ * @param {Object} script Required. Child script including attributes property.
+ * @param {Object} base Required. Parent script including attributes property.
+ */
+const inheritPrototype = function (child, base) {
   child.prototype = Object.create(
-    Object.getPrototypeOf(parent.prototype),
-    Object.getOwnPropertyDescriptors(parent.prototype),
+    Object.getPrototypeOf(base.prototype),
+    Object.getOwnPropertyDescriptors(base.prototype),
   );
 
   // Make sure functions to set default states are available
-  child.prototype.super = parent.prototype.initialize || (() => {});
-  child.prototype.superPost = parent.prototype.postInitialize || (() => {});
+  child.prototype.super = base.prototype.initialize || (() => {});
+  child.prototype.superPost = base.prototype.postInitialize || (() => {});
 };
 
-export default extendScript;
+/* eslint-enable no-param-reassign */
+
+/**
+ * Extend a script by an amount of functions, properties and attributes.
+ * @param {Object} script Required. Child script including attributes property.
+ * @param {Object} base Required. Parent script including attributes property.
+ */
+const extendScript = (child, parent) => {
+  inheritAttributes(child, parent);
+  inheritPrototype(child, parent);
+};
+
+export { inheritAttributes, inheritPrototype, extendScript };

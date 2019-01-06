@@ -3,28 +3,28 @@ import { registerFunction } from '../utils/main-loop';
 import { InspectStates } from '../utils/main-loop-stages';
 import { collisionLayerEnum } from '../physics/data/collision-layer-enum';
 
-const PlayerController = pc.createScript('PlayerController');
+const { attributes, prototype } = pc.createScript('PlayerController');
 
-PlayerController.attributes.add('_dynamicEntity', {
+attributes.add('_dynamicEntity', {
   type: 'entity',
   title: 'Dynamic Entity',
   description: `Entity with a collision component and a rigid body
    component. The latter type must be set to dynamic!`,
 });
 
-PlayerController.attributes.add('_animatedEntity', {
+attributes.add('_animatedEntity', {
   type: 'entity',
   title: 'Animated Entity',
   description: 'Entity with a model component and an animation component.',
 });
 
-PlayerController.attributes.add('_groundLayer', {
+attributes.add('_groundLayer', {
   type: 'number',
   enum: collisionLayerEnum,
   default: pc.BODYGROUP_USER_1,
 });
 
-Object.defineProperty(PlayerController.prototype, 'animationState', {
+Object.defineProperty(prototype, 'animationState', {
   get() {
     return this._animationState;
   },
@@ -38,10 +38,10 @@ Object.defineProperty(PlayerController.prototype, 'animationState', {
   },
 });
 
-PlayerController.prototype._precision = 0.001;
-PlayerController.prototype._onGround = false;
+prototype._precision = 0.001;
+prototype._onGround = false;
 
-PlayerController.prototype.initialize = function () {
+prototype.initialize = function () {
   const { entity, _dynamicEntity } = this;
   const {
     PlayerInput, PlaybotLocomotion, PlaybotMotionTracking, PlaybotAnimator,
@@ -69,11 +69,11 @@ PlayerController.prototype.initialize = function () {
   _dynamicEntity.collision.on('collisionend', this._onCollisionEnd, this);
 };
 
-PlayerController.prototype.postInitialize = function () {
+prototype.postInitialize = function () {
   registerFunction(this.syncedUpdate.bind(this), InspectStates);
 };
 
-PlayerController.prototype.syncedUpdate = function () {
+prototype.syncedUpdate = function () {
   const { entity, _playerState } = this;
   const {
     forward, backward, left, right, jump,
@@ -85,14 +85,14 @@ PlayerController.prototype.syncedUpdate = function () {
   PlaybotLocomotion.intensityX = this._computeIntensity(left, right);
 };
 
-PlayerController.prototype._computeIntensity = function (flagA, flagB) {
+prototype._computeIntensity = function (flagA, flagB) {
   if (flagA === flagB) {
     return 0;
   }
   return (flagA) ? 1 : -1;
 };
 
-PlayerController.prototype._selectActiveAnimation = function () {
+prototype._selectActiveAnimation = function () {
   const { entity, _precision } = this;
   const { PlaybotMotionTracking } = entity.script;
 
@@ -110,7 +110,7 @@ PlayerController.prototype._selectActiveAnimation = function () {
   this.animationState = 1;
 };
 
-PlayerController.prototype._onAnimationStateChanged = function () {
+prototype._onAnimationStateChanged = function () {
   const { PlaybotAnimator } = this.entity.script;
   switch (this.animationState) {
     case 2:
@@ -127,7 +127,7 @@ PlayerController.prototype._onAnimationStateChanged = function () {
   }
 };
 
-PlayerController.prototype._onCollisionStart = function (contactResult) {
+prototype._onCollisionStart = function (contactResult) {
   // console.log('_collisionstart', contactResult);
   const { rigidbody } = contactResult.other;
   if (rigidbody && rigidbody.group === this._groundLayer) {
@@ -136,7 +136,7 @@ PlayerController.prototype._onCollisionStart = function (contactResult) {
   }
 };
 
-PlayerController.prototype._onCollisionEnd = function (entity) {
+prototype._onCollisionEnd = function (entity) {
   // console.log('_collisionend', entity);
   const { rigidbody } = entity;
   if (rigidbody && rigidbody.group === this._groundLayer) {

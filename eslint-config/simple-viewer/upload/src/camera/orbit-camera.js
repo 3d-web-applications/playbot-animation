@@ -1,6 +1,6 @@
-const OrbitCamera = pc.createScript('orbitCamera');
+const { attributes, prototype } = pc.createScript('orbitCamera');
 
-OrbitCamera.attributes.add('distanceMax', {
+attributes.add('distanceMax', {
   type: 'number',
   default: 0,
   title: 'Distance Max',
@@ -8,25 +8,25 @@ OrbitCamera.attributes.add('distanceMax', {
     + 'distance limit',
 });
 
-OrbitCamera.attributes.add('distanceMin', {
+attributes.add('distanceMin', {
   type: 'number',
   default: 0,
   title: 'Distance Min',
 });
 
-OrbitCamera.attributes.add('pitchAngleMax', {
+attributes.add('pitchAngleMax', {
   type: 'number',
   default: 90,
   title: 'Pitch Angle Max (degrees)',
 });
 
-OrbitCamera.attributes.add('pitchAngleMin', {
+attributes.add('pitchAngleMin', {
   type: 'number',
   default: -90,
   title: 'Pitch Angle Min (degrees)',
 });
 
-OrbitCamera.attributes.add('inertiaFactor', {
+attributes.add('inertiaFactor', {
   type: 'number',
   default: 0,
   title: 'Inertia Factor',
@@ -35,14 +35,14 @@ OrbitCamera.attributes.add('inertiaFactor', {
     + '0 is fully responsive.',
 });
 
-OrbitCamera.attributes.add('focusEntity', {
+attributes.add('focusEntity', {
   type: 'entity',
   title: 'Focus Entity',
   description: 'Entity for the camera to focus on. If blank,'
     + 'then the camera will use the whole scene',
 });
 
-OrbitCamera.attributes.add('frameOnStart', {
+attributes.add('frameOnStart', {
   type: 'boolean',
   default: true,
   title: 'Frame on Start',
@@ -52,7 +52,7 @@ OrbitCamera.attributes.add('frameOnStart', {
 
 // Property to get and set the distance between the pivot point and camera
 // Clamped between this.distanceMin and this.distanceMax
-Object.defineProperty(OrbitCamera.prototype, 'distance', {
+Object.defineProperty(prototype, 'distance', {
   get() {
     return this._targetDistance;
   },
@@ -65,7 +65,7 @@ Object.defineProperty(OrbitCamera.prototype, 'distance', {
 // Property to get and set the pitch of the camera around the pivot point (degrees)
 // Clamped between this.pitchAngleMin and this.pitchAngleMax
 // When set at 0, the camera angle is flat, looking along the horizon
-Object.defineProperty(OrbitCamera.prototype, 'pitch', {
+Object.defineProperty(prototype, 'pitch', {
   get() {
     return this._targetPitch;
   },
@@ -76,7 +76,7 @@ Object.defineProperty(OrbitCamera.prototype, 'pitch', {
 });
 
 // Property to get and set the yaw of the camera around the pivot point (degrees)
-Object.defineProperty(OrbitCamera.prototype, 'yaw', {
+Object.defineProperty(prototype, 'yaw', {
   get() {
     return this._targetYaw;
   },
@@ -100,7 +100,7 @@ Object.defineProperty(OrbitCamera.prototype, 'yaw', {
 });
 
 // Property to get and set the world position of the pivot point that the camera orbits around
-Object.defineProperty(OrbitCamera.prototype, 'pivotPoint', {
+Object.defineProperty(prototype, 'pivotPoint', {
   get() {
     return this._pivotPoint;
   },
@@ -111,7 +111,7 @@ Object.defineProperty(OrbitCamera.prototype, 'pivotPoint', {
 });
 
 // Moves the camera to look at an entity and all its children so they are all in the view
-OrbitCamera.prototype.focus = function (focusEntity) {
+prototype.focus = function (focusEntity) {
 // Calculate an bounding box that encompasses all the models to frame in the camera view
   this._buildAabb(focusEntity, 0);
 
@@ -130,17 +130,17 @@ OrbitCamera.prototype.focus = function (focusEntity) {
   this._pivotPoint.copy(this._modelsAabb.center);
 };
 
-OrbitCamera.distanceBetween = new pc.Vec3();
+const distanceBetween = new pc.Vec3();
 
 // Set the camera position to a world position and look at a world position
 // Useful if you have multiple viewing angles to swap between in a scene
-OrbitCamera.prototype.resetAndLookAtPoint = function (resetPoint, lookAtPoint) {
+prototype.resetAndLookAtPoint = function (resetPoint, lookAtPoint) {
   this.pivotPoint.copy(lookAtPoint);
   this.entity.setPosition(resetPoint);
 
   this.entity.lookAt(lookAtPoint);
 
-  const distance = OrbitCamera.distanceBetween;
+  const distance = distanceBetween;
   distance.sub2(lookAtPoint, resetPoint);
   this.distance = distance.length();
 
@@ -156,13 +156,13 @@ OrbitCamera.prototype.resetAndLookAtPoint = function (resetPoint, lookAtPoint) {
 
 // Set camera position to a world position and look at an entity in the scene
 // Useful if you have multiple models to swap between in a scene
-OrbitCamera.prototype.resetAndLookAtEntity = function (resetPoint, entity) {
+prototype.resetAndLookAtEntity = function (resetPoint, entity) {
   this._buildAabb(entity, 0);
   this.resetAndLookAtPoint(resetPoint, this._modelsAabb.center);
 };
 
 // Set the camera at a specific, yaw, pitch and distance without inertia (instant cut)
-OrbitCamera.prototype.reset = function (yaw, pitch, distance) {
+prototype.reset = function (yaw, pitch, distance) {
   this.pitch = pitch;
   this.yaw = yaw;
   this.distance = distance;
@@ -170,7 +170,7 @@ OrbitCamera.prototype.reset = function (yaw, pitch, distance) {
   this._removeInertia();
 };
 
-OrbitCamera.prototype.initialize = function () {
+prototype.initialize = function () {
   const self = this;
 
   const onWindowResize = function () {
@@ -210,9 +210,9 @@ OrbitCamera.prototype.initialize = function () {
   if (this.frameOnStart) {
     this.focus(this.focusEntity || this.app.root);
   } else {
-    const distanceBetween = new pc.Vec3();
-    distanceBetween.sub2(this.entity.getPosition(), this._pivotPoint);
-    this._distance = this._clampDistance(distanceBetween.length());
+    const distanceInBetween = new pc.Vec3();
+    distanceInBetween.sub2(this.entity.getPosition(), this._pivotPoint);
+    this._distance = this._clampDistance(distanceInBetween.length());
   }
 
   this._targetDistance = this._distance;
@@ -255,7 +255,7 @@ OrbitCamera.prototype.initialize = function () {
   });
 };
 
-OrbitCamera.prototype.update = function (dt) {
+prototype.update = function (dt) {
   // Add inertia, if any
   const t = this.inertiaFactor === 0 ? 1 : Math.min(dt / this.inertiaFactor, 1);
   this._distance = pc.math.lerp(this._distance, this._targetDistance, t);
@@ -265,7 +265,7 @@ OrbitCamera.prototype.update = function (dt) {
   this._updatePosition();
 };
 
-OrbitCamera.prototype._updatePosition = function () {
+prototype._updatePosition = function () {
   // Work out the camera position based on the pivot point, pitch, yaw and distance
   this.entity.setLocalPosition(0, 0, 0);
   this.entity.setLocalEulerAngles(this._pitch, this._yaw, 0);
@@ -277,13 +277,13 @@ OrbitCamera.prototype._updatePosition = function () {
   this.entity.setPosition(position);
 };
 
-OrbitCamera.prototype._removeInertia = function () {
+prototype._removeInertia = function () {
   this._yaw = this._targetYaw;
   this._pitch = this._targetPitch;
   this._distance = this._targetDistance;
 };
 
-OrbitCamera.prototype._checkAspectRatio = function () {
+prototype._checkAspectRatio = function () {
   const { height, width } = this.app.graphicsDevice;
 
   // Match the axis of FOV to match the aspect ratio of the canvas so
@@ -291,7 +291,7 @@ OrbitCamera.prototype._checkAspectRatio = function () {
   this.entity.camera.horizontalFov = height > width;
 };
 
-OrbitCamera.prototype._buildAabb = function (entity, modelsAdded) {
+prototype._buildAabb = function (entity, modelsAdded) {
   let i = 0;
   let count = modelsAdded;
 
@@ -315,7 +315,7 @@ OrbitCamera.prototype._buildAabb = function (entity, modelsAdded) {
   return count;
 };
 
-OrbitCamera.prototype._calcYaw = function (quat) {
+prototype._calcYaw = function (quat) {
   const transformedForward = new pc.Vec3();
   quat.transformVector(pc.Vec3.FORWARD, transformedForward);
 
@@ -323,7 +323,7 @@ OrbitCamera.prototype._calcYaw = function (quat) {
     * pc.math.RAD_TO_DEG;
 };
 
-OrbitCamera.prototype._clampDistance = function (distance) {
+prototype._clampDistance = function (distance) {
   if (this.distanceMax > 0) {
     return pc.math.clamp(distance, this.distanceMin, this.distanceMax);
   }
@@ -331,17 +331,15 @@ OrbitCamera.prototype._clampDistance = function (distance) {
   return Math.max(distance, this.distanceMin);
 };
 
-OrbitCamera.prototype._clampPitchAngle = function (pitch) {
+prototype._clampPitchAngle = function (pitch) {
   // Negative due as the pitch is inversed since the camera is orbiting the entity
   return pc.math.clamp(pitch, -this.pitchAngleMax, -this.pitchAngleMin);
 };
 
-OrbitCamera.quatWithoutYaw = new pc.Quat();
-OrbitCamera.yawOffset = new pc.Quat();
+const quatWithoutYaw = new pc.Quat();
+const yawOffset = new pc.Quat();
 
-OrbitCamera.prototype._calcPitch = function (quat, yaw) {
-  const { quatWithoutYaw, yawOffset } = OrbitCamera;
-
+prototype._calcPitch = function (quat, yaw) {
   yawOffset.setFromEulerAngles(0, -yaw, 0);
   quatWithoutYaw.mul2(yawOffset, quat);
 

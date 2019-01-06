@@ -1,34 +1,34 @@
 import collectAttributes from '../utils/collect-attributes';
 
-const Animator = pc.createScript('Animator');
+const { attributes, prototype } = pc.createScript('Animator');
 
-const attributes = [];
-Animator.attributes.add = collectAttributes(
-  Animator.attributes.add,
-  attributes,
+const inheritableAttributes = [];
+attributes.add = collectAttributes(
+  attributes.add,
+  inheritableAttributes,
 );
 
 // TODO obsolete because speed is set by others in the future and is also set to 0 on initialization
-Animator.attributes.add('_animationSpeed', {
+attributes.add('_animationSpeed', {
   type: 'number',
   title: 'Start Animation Speed',
   default: 1,
   description: 'Set default animation speed',
 });
 
-Animator.attributes.add('_blendTime', {
+attributes.add('_blendTime', {
   type: 'number',
   title: 'Blend Time',
   default: 0,
   description: 'Time to blend between animations',
 });
 
-Animator.prototype._animation = null;
-Animator.prototype._time = 0;
-Animator.prototype._progress = 0;
-Animator.prototype._speed = 1;
+prototype._animation = null;
+prototype._time = 0;
+prototype._progress = 0;
+prototype._speed = 1;
 
-Object.defineProperty(Animator.prototype, 'animation', {
+Object.defineProperty(prototype, 'animation', {
   get() {
     return this._animation;
   },
@@ -38,7 +38,7 @@ Object.defineProperty(Animator.prototype, 'animation', {
   },
 });
 
-Object.defineProperty(Animator.prototype, 'time', {
+Object.defineProperty(prototype, 'time', {
   get() {
     return this._time;
   },
@@ -61,7 +61,7 @@ Object.defineProperty(Animator.prototype, 'time', {
   },
 });
 
-Object.defineProperty(Animator.prototype, 'progress', {
+Object.defineProperty(prototype, 'progress', {
   get() {
     return this._progress;
   },
@@ -77,7 +77,7 @@ Object.defineProperty(Animator.prototype, 'progress', {
   },
 });
 
-Object.defineProperty(Animator.prototype, 'speed', {
+Object.defineProperty(prototype, 'speed', {
   get() {
     return this._speed;
   },
@@ -87,18 +87,18 @@ Object.defineProperty(Animator.prototype, 'speed', {
   },
 });
 
-Animator.prototype.initialize = function () {
+prototype.initialize = function () {
   this._animation.speed = 0;
 };
 
-Animator.prototype.startAnimation = function (animationName, loop) {
+prototype.startAnimation = function (animationName, loop) {
   const { _blendTime } = this;
   this._animation.play(animationName, _blendTime);
   this._animation.loop = loop;
   this.time = 0;
 };
 
-Animator.prototype.getCurrentDuration = function () {
+prototype.getCurrentDuration = function () {
   return this._animation.duration;
 };
 
@@ -110,14 +110,14 @@ Animator.prototype.getAnimationProgress = function () {
   return this.getCurrentTime() / this.getCurrentDuration();
 }; */
 
-Animator.prototype._onTimeChanged = function () {
+prototype._onTimeChanged = function () {
   this.progress = this.time / this.getCurrentDuration();
 };
 
-Animator.prototype._onAnimationProgressChanged = function () {
+prototype._onAnimationProgressChanged = function () {
   this._animation.currentTime = pc.math.lerp(
     0, this.getCurrentDuration(), this.progress,
   );
 };
 
-export { Animator, attributes };
+export const base = { prototype, attributes: inheritableAttributes };
