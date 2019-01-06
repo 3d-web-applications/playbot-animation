@@ -170,7 +170,7 @@ prototype.initialize = function () {
 ```
 We can go one step further and use the destructuring assigment.
 ```javascript
-const { attributes, prototype } = pc.createScript('CollisionGroup');
+const { attributes, prototype } = pc.createScript('MyScript');
 
 attributes.add('myAttribute', {
   // ...
@@ -193,6 +193,45 @@ MyScript.prototype.initialize = function () {
 }
 ```
 So, to keep scripts as clean as possible it would be necessary to also rename all occurrences of the main variable. But this can introduce further errors.
+### Summary
+When following my convention, scripts should look like this one:
+```javascript
+// 0-N import statements
+import { something } from './everything';
+
+const { attributes, prototype } = pc.createScript('MyScript');
+
+// 0-N attribute definitions
+attributes.add('myPublicOrPrivateAttribute', { /*...*/ });
+
+// 0-N property definitions
+Object.defineProperty(prototype, 'myPublicOrPrivateProperty', {
+  get() {
+    return this._myPrivateVariable;
+  },
+
+  set(value) {
+    if (value === this._myPrivateVariable) {
+      return;
+    }
+    this._myPrivateVariable = value;
+    this._onMyPrivateVariableChanged();
+  },
+});
+
+// 0-N variable definitions which are only used inside properties or functions of the current script
+prototype._myPrivateVariable = null;
+
+// 0-N standard functions
+prototype.initialize = function () { /*...*/ };
+
+// 0-N custom private or public functions
+prototype.myFunction = function () { /*...*/ };
+
+// 0-N event handler functions
+prototype._onMyPrivateVariableChanged = function () { /*...*/ };
+```
+You might note, that I list all private variables above the functions, instead of only declaring them inside functions when they are required. I accept the small overhead in return for a better readability. When using JSDoc, it becomess even more important.
 
 ### Footnotes
 1. After renaming and uploading scripts, don't forget to hit the 'Parse' button in the PlayCanvas Editor!
