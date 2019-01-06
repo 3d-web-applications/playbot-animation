@@ -1,6 +1,7 @@
 import { createPlayerState } from './create-player-state';
 import { registerFunction } from '../utils/main-loop';
 import { InspectStates } from '../utils/main-loop-stages';
+import { collisionLayerEnum } from '../physics/data/collision-layer-enum';
 
 const PlayerController = pc.createScript('PlayerController');
 
@@ -15,6 +16,12 @@ PlayerController.attributes.add('_animatedEntity', {
   type: 'entity',
   title: 'Animated Entity',
   description: 'Entity with a model component and an animation component.',
+});
+
+PlayerController.attributes.add('_groundLayer', {
+  type: 'number',
+  enum: collisionLayerEnum,
+  default: pc.BODYGROUP_USER_1,
 });
 
 Object.defineProperty(PlayerController.prototype, 'animationState', {
@@ -32,6 +39,7 @@ Object.defineProperty(PlayerController.prototype, 'animationState', {
 });
 
 PlayerController.prototype._precision = 0.001;
+PlayerController.prototype._onGround = false;
 
 PlayerController.prototype.initialize = function () {
   const { entity, _dynamicEntity } = this;
@@ -57,8 +65,8 @@ PlayerController.prototype.initialize = function () {
 
   PlaybotAnimator.animation = this._animatedEntity.animation;
 
-  _dynamicEntity.collision.on('collisionstart', this._onGroundEntered, this);
-  _dynamicEntity.collision.on('collisionend', this._onGroundLeft, this);
+  _dynamicEntity.collision.on('collisionstart', this._onCollisionStart, this);
+  _dynamicEntity.collision.on('collisionend', this._onCollisionEnd, this);
 };
 
 PlayerController.prototype.postInitialize = function () {
@@ -119,12 +127,20 @@ PlayerController.prototype._onAnimationStateChanged = function () {
   }
 };
 
-PlayerController.prototype._onGroundEntered = function () {
-  // console.log('_onGroundEntered');
-  this._onGround = true;
+PlayerController.prototype._onCollisionStart = function (contactResult) {
+  // console.log('_collisionstart', contactResult);
+  const { rigidbody } = contactResult.other;
+  if (rigidbody && rigidbody.group === this._groundLayer) {
+    // console.log(rigidbody.group);
+    this._onGround = true;
+  }
 };
 
-PlayerController.prototype._onGroundLeft = function () {
-  // console.log('_onGroundLeft');
-  this._onGround = false;
+PlayerController.prototype._onCollisionEnd = function (entity) {
+  // console.log('_collisionend', entity);
+  const { rigidbody } = entity;
+  if (rigidbody && rigidbody.group === this._groundLayer) {
+    // console.log(entity.rigidbody.group);
+    this._onGround = false;
+  }
 };
