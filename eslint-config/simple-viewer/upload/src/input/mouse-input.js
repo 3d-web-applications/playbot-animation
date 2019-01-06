@@ -111,13 +111,11 @@ prototype.onMouseMove = function (event) {
   this.lastPoint.set(event.x, event.y);
 };
 
-
 prototype.onMouseWheel = function (event) {
   this.orbitCamera.distance -= event.wheel
     * this.distanceSensitivity * (this.orbitCamera.distance * 0.1);
   event.event.preventDefault();
 };
-
 
 prototype.onMouseOut = function (/* event */) {
   this.lookButtonDown = false;
