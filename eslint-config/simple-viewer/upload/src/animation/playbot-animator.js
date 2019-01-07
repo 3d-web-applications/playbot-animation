@@ -20,7 +20,7 @@ prototype.postInitialize = function () {
 };
 
 prototype.syncedUpdate = function (dt) {
-  // this.time += (dt * this.speed);
+  this.time += (dt * this.speed);
 };
 
 prototype.startIdleAnimation = function () {
@@ -31,7 +31,7 @@ prototype.startIdleAnimation = function () {
 prototype.startRunAnimation = function () {
   this.startAnimation('Playbot_run', true);
   // this.speed = 1;
-  this.speed = 0;
+  // this.speed = 0;
 };
 
 prototype.startJumpAnimation = function () {

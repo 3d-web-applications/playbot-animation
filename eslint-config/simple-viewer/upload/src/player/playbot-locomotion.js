@@ -25,9 +25,18 @@ prototype.postInitialize = function () {
 
 prototype.syncedUpdate = function () {
   const { x, y, z } = this._maxForces;
-  this._rigidbody.applyForce(
-    x * this.intensityX,
+  /* this._rigidbody.applyForce(
+    0, // x * this.intensityX,
     y * this.intensityY,
-    z * this.intensityZ,
-  );
+    z * this.intensityZ + x * this.intensityX,
+  ); */
+  if (x) {
+    this._rigidbody.applyTorque(0, x * this.intensityX * 0.2, 0);
+  }
+  if (y) {
+    this._rigidbody.applyForce(0, y * this.intensityY, 0);
+  }
+  if (z) {
+    this._rigidbody.applyForce(this._rigidbody.entity.forward.clone().scale(-z * this.intensityZ));
+  }
 };
