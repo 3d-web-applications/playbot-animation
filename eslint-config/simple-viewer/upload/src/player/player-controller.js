@@ -130,7 +130,7 @@ prototype._selectActiveAnimation = function () {
 
   this.animationState = 1;
   // PlaybotAnimator.time += Math.sqrt(dx * dx + dz * dz);
-  PlaybotAnimator.speed = Math.sqrt(dx * dx + dz * dz) * 80;
+  PlaybotAnimator.speed = Math.sqrt(dx * dx + dz * dz) * 40;
   console.log(PlaybotAnimator.speed);
 };
 
