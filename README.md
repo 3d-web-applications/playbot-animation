@@ -5,6 +5,10 @@ Contains scripts to blend between animations
 - Create new PlayCanvas project
 - Visit PlayCanvas Store; Search for [Playbot](http://store.playcanvas.com/item/1/playbot); Click on <i>Download</i>; Select your target project
 
+```diff
+- Please note that the following sections have no specific order. Currently I am just writing down all my thoughts.
+```
+
 ## Inheritance
 
 People comming from object-oriented programming would often like to have some kind of object inheritance in Javascript (JS). It is possible in JS, but not gladly seen by other developers. But in PlayCanvas, there is a specific need for such feature. Reducing the amount of code inside PlayCanvas scripts sustain readability and refactorability. Probably, people coming from Unity, enjoying the comfort of inheriting scripts with serialized properties, have the biggest need for such feature. Well, that was my primary reason to develop such a feature.
@@ -238,3 +242,15 @@ There is one more to say to my current conventions. I am currently evaluating st
 ### Footnotes
 1. Be careful when using the destructuring assignment inside functions from a script. This can also introduce new errors. A common mistake is to pick functions from that script. This will end in losing the binding.
 2. After renaming and uploading scripts, don't forget to hit the 'Parse' button in the PlayCanvas Editor!
+
+## Open Tasks
+- Leaving footprints
+- Walking on ice or blading on ice (pause walk animation at N seconds)
+- Falling down on ice (forward movement + die animation)
+- Colliding with enemies
+- Enemies chasing player
+- Enemies flee from player
+- Swarm system in 2D/3D
+- Custom tag system
+- UI via React components
+
