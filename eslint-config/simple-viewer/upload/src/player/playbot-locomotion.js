@@ -24,22 +24,22 @@ prototype.postInitialize = function () {
 };
 
 prototype.syncedUpdate = function () {
-  const { x, y, z } = this._maxForces;
-  /* this._rigidbody.applyForce(
-    0, // x * this.intensityX,
-    y * this.intensityY,
-    z * this.intensityZ + x * this.intensityX,
-  ); */
-  if (this.intensityX) {
-    this._rigidbody.applyTorque(0, x * this.intensityX * 0.2, 0);
-    this._rigidbody.applyForce(this._rigidbody.entity.forward.clone().scale(-x));
+  const {
+    _maxForces, _rigidbody, intensityX, intensityY, intensityZ,
+  } = this;
+  const { x, y, z } = _maxForces;
+  const { forward } = _rigidbody.entity;
+
+  if (intensityX) {
+    _rigidbody.applyTorque(0, x * intensityX * 0.2, 0);
+    _rigidbody.applyForce(forward.scale(-x));
     return;
   }
-  if (this.intensityY) {
-    this._rigidbody.applyForce(0, y, 0);
+  if (intensityY) {
+    _rigidbody.applyForce(0, y, 0);
     return;
   }
-  if (this.intensityZ) {
-    this._rigidbody.applyForce(this._rigidbody.entity.forward.clone().scale(-z * this.intensityZ));
+  if (intensityZ) {
+    _rigidbody.applyForce(forward.scale(-z * intensityZ));
   }
 };
