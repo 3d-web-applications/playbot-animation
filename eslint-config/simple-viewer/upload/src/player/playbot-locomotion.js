@@ -6,7 +6,7 @@ const { attributes, prototype } = pc.createScript('PlaybotLocomotion');
 attributes.add('_maxForces', {
   type: 'vec3',
   title: 'Forces',
-  default: [15, 15, 15],
+  default: [45, 15, 45],
   description: 'Forces in x/y/z',
 });
 
