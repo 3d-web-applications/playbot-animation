@@ -110,7 +110,7 @@ prototype._computeIntensity = function (flagA, flagB) {
 };
 
 prototype._selectActiveAnimation = function () {
-  const { entity, _precision } = this;
+  const { entity, _precision, _playerState } = this;
   const { PlaybotMotionTracking, PlaybotAnimator } = entity.script;
   const {
     dx, dy, dz, flightHeight,
@@ -128,20 +128,26 @@ prototype._selectActiveAnimation = function () {
     return;
   }
 
-  this.animationState = 1;
-  // PlaybotAnimator.time += Math.sqrt(dx * dx + dz * dz);
-  PlaybotAnimator.speed = Math.sqrt(dx * dx + dz * dz) * 40;
-  console.log(PlaybotAnimator.speed);
+  if (_playerState.backward) {
+    this.animationState = 3;
+    PlaybotAnimator.speed = -Math.sqrt(dx * dx + dz * dz) * 40;
+  } else {
+    this.animationState = 1;
+    PlaybotAnimator.speed = Math.sqrt(dx * dx + dz * dz) * 40;
+  }
 };
 
 prototype._onAnimationStateChanged = function () {
   const { PlaybotAnimator } = this.entity.script;
   switch (this.animationState) {
+    case 3:
+      PlaybotAnimator.startRunAnimation(false);
+      break;
     case 2:
       PlaybotAnimator.startIdleAnimation();
       break;
     case 1:
-      PlaybotAnimator.startRunAnimation();
+      PlaybotAnimator.startRunAnimation(true);
       break;
     case 0:
       PlaybotAnimator.startJumpAnimation();

@@ -1,4 +1,5 @@
 import collectAttributes from '../utils/collect-attributes';
+// import { modulo } from '../math/modulo';
 
 const { attributes, prototype } = pc.createScript('Animator');
 
@@ -44,10 +45,16 @@ Object.defineProperty(prototype, 'time', {
   },
 
   set(value) {
+    // console.log(value);
     const duration = this.getCurrentDuration();
     if (this._animation.loop && value >= duration) {
       this._time = value % duration;
       this._onTimeChanged();
+      return;
+    }
+
+    if (this._animation.loop && value < 0) {
+      this._time = duration - value;
       return;
     }
 
@@ -91,11 +98,11 @@ prototype.initialize = function () {
   this._animation.speed = 0;
 };
 
-prototype.startAnimation = function (animationName, loop) {
+prototype.startAnimation = function (animationName, loop, forward = true) {
   const { _blendTime } = this;
   this._animation.play(animationName, _blendTime);
   this._animation.loop = loop;
-  this.time = 0;
+  this.time = (forward) ? 0 : this.getCurrentDuration() - 0.01;
 };
 
 prototype.getCurrentDuration = function () {

@@ -30,6 +30,14 @@ prototype.syncedUpdate = function () {
   const { x, y, z } = _maxForces;
   const { forward } = _rigidbody.entity;
 
+  /* Important note: Damping from Rigidbody is used to prevent adding up forces over multiple frames.
+  But when linear damping = 1, even the gravity is highly affected. Objects will fall at the beginning
+  and will hover in the air until a new force was applied for a short amount of time. Only after this force was
+  canceled, the gravity will be applied to the object again. This must be repeated until the object reaches the
+  ground. One can set the linear damping to 0.999. Then the object will fall continously until it reaches
+  the ground. But allowing PlayCanvas to handle the gravity still might be a bad idea. Applying a constant force
+  at a specific moment in the current main loop frame to simulate the gravity could be a wise decision.
+  */
   if (intensityX) {
     _rigidbody.applyTorque(0, x * intensityX * 0.2, 0);
     _rigidbody.applyForce(forward.scale(-x));

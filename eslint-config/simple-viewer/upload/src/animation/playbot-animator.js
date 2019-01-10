@@ -28,8 +28,8 @@ prototype.startIdleAnimation = function () {
   this.speed = 1;
 };
 
-prototype.startRunAnimation = function () {
-  this.startAnimation('Playbot_run', true);
+prototype.startRunAnimation = function (forward = true) {
+  this.startAnimation('Playbot_run', true, forward);
   // this.speed = 1;
   // this.speed = 0;
 };
