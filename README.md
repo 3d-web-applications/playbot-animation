@@ -243,6 +243,16 @@ There is one more to say to my current conventions. I am currently evaluating st
 1. Be careful when using the destructuring assignment inside functions from a script. This can also introduce new errors. A common mistake is to pick functions from that script. This will end in losing the binding.
 2. After renaming and uploading scripts, don't forget to hit the 'Parse' button in the PlayCanvas Editor!
 
+## Physics
+### Linear Damping
+When I enabled the physics system in my project, I observed a strange effect. Sometimes characters were falling for a short amount of time. But before they have reached the ground, they were captive in some kind of stasis. The reason was that i had set the linear damping to 1. With any value below 1 this effect is not so obvious. But it can still be observed, for instance by disabling the platform the character is standing at the moment. Consequently the gravity is affected by linear damping, like other forces. But more important is, that the gravity is only applied once after another force was applied to a character. It does not matter if a force was triggered by a script or if another object collides with the character. It makes sense, but unfortunately I was relying on permanent forces. I was hoping to extinguish all forces from the last frame with linear damping, before applying new ones. Otherwise forces would add up over time. This leads me to that point, where I have to review my design for the second time.
+
+What are proper alternatives?
+- With a custom physics system, I would be able collect forces, compute result vectors and apply them to characters. It would also allow me to stop/start physics on application pause/continue. But without deep knowledge, I could introduce performance leaks.
+- An easier solution is doing some research about proper values for forces and damping. Providing a json file, would enable Game Designers to modify default values even after release. When pausing/continuing an application, rigidbodies should be disabled/enabled.
+
+![Image shows linear damping](https://github.com/3d-web-applications/playbot-animation/blob/master/resources/linear-damping.png)
+
 ## Open Tasks
 - Leaving footprints
 - Walking on ice or blading on ice (pause walk animation at N seconds)
