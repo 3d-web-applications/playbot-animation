@@ -252,6 +252,7 @@ What are proper alternatives?
 - An easier solution is doing some research about proper values for forces and damping. Providing a json file, would enable Game Designers to modify default values even after release. When pausing/continuing an application, rigidbodies should be disabled/enabled.
 
 ![Image shows linear damping](https://github.com/3d-web-applications/playbot-animation/blob/master/resources/linear-damping.png)
+![Image shows a character hovering in air](https://github.com/3d-web-applications/playbot-animation/blob/master/resources/gravity.png)
 
 ## Open Tasks
 - Leaving footprints
