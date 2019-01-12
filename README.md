@@ -249,10 +249,15 @@ When I enabled the physics system in my project, I observed a strange effect. So
 
 What are proper alternatives?
 - With a custom physics system, I would be able collect forces, compute result vectors and apply them to characters. It would also allow me to stop/start physics on application pause/continue. But without deep knowledge, I could introduce performance leaks.
-- An easier solution is doing some research about proper values for forces and damping. Providing a json file, would enable Game Designers to modify default values even after release. When pausing/continuing an application, rigidbodies should be disabled/enabled.
+- An easier solution is doing some research about proper values for forces and damping. Providing a json file, would enable Game Designers to modify default values even after release. But it will also mean, that I still have to disabled/enabled rigidbodies on application pause/continue manually. 
 
 ![Image shows linear damping](https://github.com/3d-web-applications/playbot-animation/blob/master/resources/linear-damping.png)
 ![Image shows a character hovering in air](https://github.com/3d-web-applications/playbot-animation/blob/master/resources/gravity.png)
+
+<b>Update</b>
+After doing some research, it looks like that all objects in rest, lose their potential energy. I did not find any setup for rigidbodies, where this effect did not happen. As mentioned earlier, objects need another force to be affected by gravity again. Meanwhile there was something else which attract my attention. When setting friction for static and dynamic objects to zero; setting linear damping for dynamic objects to zero and restitution for the static or for the dynamic object to 0.891, the dynamic object will endlessly bounce of the static object without loosing any energy. But when setting the restitution for one of the objects to a higher value, the dynamic object will reach higher points with each bounce.
+
+- Another alternative would be to override the linear velocity. But this can result in odd effects as mentioned in this [tutorial](https://developer.playcanvas.com/en/tutorials/Using-forces-on-rigid-bodies/).
 
 ## Open Tasks
 - Leaving footprints
