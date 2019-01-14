@@ -259,7 +259,20 @@ What are proper alternatives?
 After doing some research, it looks like that all objects in rest, lose their potential energy. I did not find any setup for rigidbodies, where this effect did not happen. As mentioned earlier, objects need another force to be affected by gravity again. Meanwhile there was something else which attract my attention. When setting friction for static and dynamic objects to zero; setting linear damping for dynamic objects to zero and restitution for the static or for the dynamic object to 0.891, the dynamic object will endlessly bounce of the static object without loosing any energy. But when setting the restitution for one of the objects to a higher value, the dynamic object will reach higher points with each bounce.
 
 <b>Update No. 2</b><br />
-Like in Unity, the PlayCanvas physics engine assumes that rigidbodies moving slower than a specified minimum speed, come to a halt (see [Unity Manual](https://docs.unity3d.com/Manual/RigidbodiesOverview.html)). Both engines provide methods to [WakeUp()](https://docs.unity3d.com/ScriptReference/Rigidbody.WakeUp.html)/[activate()](https://developer.playcanvas.com/en/api/pc.RigidBodyComponent.html#activate) rigidbodies. But PlayCanvas does not provide a function to put rigidbodies back to sleep. Maybe one can set the linearFactor and the linearVelocity properties of the rigidbody component to (0, 0, 0). I did not test this yet. One could also change the type of the rigidbody to pc.BODYTYPE_STATIC and later back to pc.BODYTYPE_DYNAMIC or pc.BODYTYPE_KINEMATIC. But like in Unity, this will introduce performance overheads. That is why this strategy should be used sparingly.  
+Like in Unity, the PlayCanvas physics engine assumes that rigidbodies moving slower than a specified minimum speed, come to a halt (see [Unity Manual](https://docs.unity3d.com/Manual/RigidbodiesOverview.html)). Both engines provide methods to [WakeUp()](https://docs.unity3d.com/ScriptReference/Rigidbody.WakeUp.html)/[activate()](https://developer.playcanvas.com/en/api/pc.RigidBodyComponent.html#activate) rigidbodies. But PlayCanvas does not provide a function to put rigidbodies back to sleep. Maybe one can set the linearFactor and the linearVelocity properties of the rigidbody component to (0, 0, 0). I did not test this yet. One could also change the type of the rigidbody to pc.BODYTYPE_STATIC and later back to pc.BODYTYPE_DYNAMIC or pc.BODYTYPE_KINEMATIC. But like in Unity, this will introduce performance overheads. That is why this strategy should be used sparingly.
+
+To test the behaviour of the PlayCanvas physics engine by yourself, you can attach the script below to an entity with a static rigidbody component. Place another entity with a dynamic rigidbody component on top of the other. Furthermore add model and collision components to both. Now launch the application and allow the second entity to rest on top of the first one. Then disable the static rigidbody component and watch what happens. After a short amount of time, you will see the entity with the dynamic rigidbody component falling through the first one. Other ways to achieve this effect is by disabling the first entity or changing its position within the PlayCanvas editor.
+```javascript
+var Wakeup = pc.createScript('Wakeup');
+
+Wakeup.prototype.initialize = function() {
+    this.entity.collision.on('collisionend', this._onCollisionEnd, this);
+};
+
+Wakeup.prototype._onCollisionEnd = function(otherEntity) {
+    otherEntity.rigidbody.activate();
+};
+```
 
 ## Open Tasks
 - Leaving footprints
