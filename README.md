@@ -280,6 +280,12 @@ After modelling two types of batteries, I discovered a problem inside PlayCanvas
 
 ![Three models placed in the scene. One shows some culling problems](https://github.com/3d-web-applications/playbot-animation/blob/master/resources/batteries.png)
 
+## LookAt Problem
+
+PlayCanvas provides a lookAt function like other engines. But in contrast to others, this function [reorients the graph node so that the negative z-axis points towards the target](https://developer.playcanvas.com/en/api/pc.Entity.html#lookAt). So the entity using that function is not rotated towards the target. Instead it faces into the opposite direction. The images below shall help to visualize the problem. As you can see in the first image, the hover tank on the right is selected. The handles show that the model is rotated towards the positive z-axis. The script calling the lookAt function (marked with an X inside the hierarchy) is attached to <i>Tank_gun_turret</i> entity. As you can see in the second image, the turret of that hover tank is looking in the opposite direction.  You could solve the problem by adding another rotation inside the script. But this would also mean adding an additional calculation per function call. A much better approach is to rotate the model inside the editor before launching the application. For instance, the second hover tank was rotated by 180 degrees around the y-axis in the editor. But as you can see in the second image, the turret is still not facing the target. The 180 degrees of the turret get lost when the turret entity is calling the lookAt function. The solution to this problem is to place the models under another entity. This new entity should call the lookAt function, while its children can be rotated by 180 degrees.  
+![Shows a scene inside the PlayCanvas editor](https://github.com/3d-web-applications/playbot-animation/blob/master/resources/lookat-example-1.png)
+![Shows the same scene after the application was launched](https://github.com/3d-web-applications/playbot-animation/blob/master/resources/lookat-example-2.png)
+
 ## Open Tasks
 - Leaving footprints
 - Walking on ice or blading on ice (pause walk animation at N seconds)
