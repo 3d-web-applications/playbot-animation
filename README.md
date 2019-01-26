@@ -274,6 +274,12 @@ Wakeup.prototype._onCollisionEnd = function(otherEntity) {
 };
 ```
 
+## Asset Import Problem
+
+After modelling two types of batteries, I discovered a problem inside PlayCanvas. It cannot handle negative scales properly. Sometimes this can be in handy to mirror the model in x, y or z. Supposedly, Unity and ThreeJS have some correction methods. But as seen in the image, PlayCanvas does not have such feature yet. The naive solution is to select all corresponding materials and change backface culling to frontface culling. Another naive solution would be to flip the normals inside your prefered 3d modelling tool. But this can introduce further problems like missing reflections. So both ways are not applicable when developing software for customers. The only serious solution seems to be to double-check all models twice during the export. In my case, I did not saw, that a negative scale was set while I was applying Modifiers in Blender.
+
+![Three models placed in the scene. One shows some culling problems](https://github.com/3d-web-applications/playbot-animation/blob/master/resources/batteries.png)
+
 ## Open Tasks
 - Leaving footprints
 - Walking on ice or blading on ice (pause walk animation at N seconds)
