@@ -1,5 +1,7 @@
 import './utils/main-loop';
 import './camera/orbit-camera';
+import './camera/lookat';
+import './camera/angular-distance';
 import './input/mouse-input';
 import './input/touch-input';
 import './input/keyboard-input';
