@@ -286,6 +286,9 @@ PlayCanvas provides a lookAt function like other engines. But in contrast to oth
 ![Shows a scene inside the PlayCanvas editor](https://github.com/3d-web-applications/playbot-animation/blob/master/resources/lookat-example-1.png)
 ![Shows the same scene after the application was launched](https://github.com/3d-web-applications/playbot-animation/blob/master/resources/lookat-example-2.png)
 
+### Thoughts about number accuracy
+Before I found a better solution to compute the angle between two vectors, I was translating and analyzing the Angle and SignedAngle functions from [Unity](https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Vector3.cs). My first results have shown that angles near 0 as well as angles near 180 degrees could not be computed very well. 
+
 ## Open Tasks
 - Leaving footprints
 - Walking on ice or blading on ice (pause walk animation at N seconds)
