@@ -12,3 +12,4 @@ import './player/playbot-locomotion';
 import './player/playbot-motion-tracking';
 import './physics/collision-group';
 import './physics/collision-mask';
+import './enemy/combat/turret';
