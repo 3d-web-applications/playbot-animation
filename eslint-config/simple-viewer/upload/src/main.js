@@ -16,3 +16,4 @@ import './physics/collision-mask';
 import './enemy/combat/turret';
 import './enemy/combat/shooting';
 import './interior/spawner';
+import './time/time-interval';
