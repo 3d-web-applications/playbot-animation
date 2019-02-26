@@ -11,6 +11,10 @@ Contains scripts to blend between animations
 
 ## Inheritance
 
+```diff
+- Latest tests have shown, that inheriting PlayCanvas enums is still not possible
+```
+
 People comming from object-oriented programming would often like to have some kind of object inheritance in Javascript (JS). It is possible in JS, but not gladly seen by other developers. But in PlayCanvas, there is a specific need for such feature. Reducing the amount of code inside PlayCanvas scripts sustain readability and refactorability. Probably, people coming from Unity, enjoying the comfort of inheriting scripts with serialized properties, have the biggest need for such feature. Well, that was my primary reason to develop such a feature.
 
 Please also note:
